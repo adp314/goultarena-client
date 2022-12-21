@@ -3,6 +3,7 @@ import { Test } from "./pages/Test/index"
 import './i18n'
 import { useTranslation } from 'react-i18next'
 import { useEffect } from 'react'
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 
 
@@ -35,7 +36,11 @@ function App() {
 
   return (
     <>
-    <Test/>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Test/>}/>
+        </Routes>
+      </BrowserRouter>
     </>
   );
 }

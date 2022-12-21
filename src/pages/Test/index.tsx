@@ -12,12 +12,17 @@ export function Test(){
 
      function  handleClickFR(event: React.MouseEvent<HTMLElement>){
        event.preventDefault();
+
        localStorage.setItem('i18nextLng', 'fr' )
+       const navigate = useNavigate()
+       navigate("/fr")
      }
 
      function  handleClickEN(event: React.MouseEvent<HTMLElement>){
       event.preventDefault();
       localStorage.setItem('i18nextLng', 'en' )
+      const navigate = useNavigate()
+       navigate("/en")
     }
     
     const { t } = useTranslation()
