@@ -15,11 +15,10 @@ export function Test(){
        localStorage.setItem('i18nextLng', 'fr' )
      }
 
-  //   function  handleClickEN(event: React.MouseEvent<HTMLElement>){
-  //     event.preventDefault();
-     
-
-  //   }
+     function  handleClickEN(event: React.MouseEvent<HTMLElement>){
+      event.preventDefault();
+      localStorage.setItem('i18nextLng', 'en' )
+    }
     
     const { t } = useTranslation()
 
@@ -27,7 +26,7 @@ export function Test(){
     return (
         <div className={style.testTranslateContainer}>
             <div className={style.testTranslateFR} onClick={handleClickFR}>FR</div>
-            <div className={style.testTranslateEN} >EN</div>
+            <div className={style.testTranslateEN} onClick={handleClickEN}>EN</div>
             <p>{t('welcome')}</p>
         </div>
     )
