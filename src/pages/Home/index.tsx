@@ -1,7 +1,5 @@
-import { BasicNav } from "../../components/BasicNav/index"
+import { Layout } from "../../components/Layout/index";
 
-export function Home(){
-    return (
-        <BasicNav/>
-    )
+export function Home() {
+  return <Layout />;
 }

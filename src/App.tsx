@@ -1,13 +1,20 @@
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { AuthContextComponent } from "./contexts/authContext";
 import "./App.css";
-//import { Test } from "./pages/Test/index";
-import { BasicNav } from "./components/BasicNav";
-import { Home } from "./pages/Home/index";
 import "./i18n";
+import { Home } from "./pages/Home/index";
 
 function App() {
   return (
     <>
-    <Home/>
+      <AuthContextComponent>
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<Navigate to="/home" />} />
+            <Route path="/home" element={<Home />} />
+          </Routes>
+        </BrowserRouter>
+      </AuthContextComponent>
     </>
   );
 }
