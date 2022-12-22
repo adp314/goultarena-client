@@ -11,13 +11,12 @@ i18next
     supportedLngs: ["en", "fr"],
     fallbackLng: "fr",
     debug: false,
-    // Options for language detector
+
     detection: {
       order: ["path", "localStorage", "htmlTag"],
       caches: ["localStorage"],
     },
-    // react: { useSuspense: false },
     backend: {
-      loadPath: "../public/locales/{{lng}}/translation.json",
+      loadPath: "../public/locales/{{lng}}/{{ns}}.json",
     },
   });

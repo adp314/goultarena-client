@@ -6,11 +6,11 @@ import "../../i18n";
 export function Test() {
   const { t, i18n } = useTranslation();
 
-  function handleClickFR(event: React.MouseEvent<HTMLElement>) {
+  function handleClickFR() {
     i18n.changeLanguage("fr");
   }
 
-  function handleClickEN(event: React.MouseEvent<HTMLElement>) {
+  function handleClickEN() {
     i18n.changeLanguage("en");
   }
 
@@ -22,7 +22,10 @@ export function Test() {
       <div className={style.testTranslateEN} onClick={handleClickEN}>
         EN
       </div>
-      <p>{t("welcome")}</p>
+      <h1 className="text-3xl font-bold underline">
+      {t("welcome")}
+    </h1>
+      <p>{t("app_title")}</p>
     </div>
   );
 }
