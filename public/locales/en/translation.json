@@ -1,4 +1,14 @@
 {
-    "app_title": "Goultarena EN",
-    "welcome": "Welcome on Goultarena"
+  "app_title": "Goultarena EN",
+  "welcome": "Welcome on Goultarena",
+  "nav_home": "Home",
+  "nav_ladders": "Ladders",
+  "nav_ladders1vs1": "Ladder 1vs1",
+  "nav_ladders2vs2": "Ladder 2vs2",
+  "nav_ladders3vs3": "Ladder 3vs3",
+  "nav_directorybook": "Directory",
+  "nav_directoryplayers": "Players",
+  "nav_directoryteams": "Teams",
+  "nav_ranking": "Ranking",
+  "nav_help": "Help"
 }
