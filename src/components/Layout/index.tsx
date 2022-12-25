@@ -27,12 +27,10 @@ export function Layout() {
   return (
     <div className="flex">
       <aside className="bg-neutral-900 sticky left-0 w-56 h-screen box-border flex flex-col items-center justify-start border-solid">
-        <img
-          className="px-11 my-8 w-auto ml-2"
-          src={goultarenalogo}
-          alt="goultarena_logo"
-        />
-        <div className="box-border h-1 w-full bg-white"></div>
+        <div className="w-full border-2">
+          <img className=" w-1/2" src={goultarenalogo} alt="goultarena_logo" />
+        </div>
+        <div className="box-border h-1 w-full bg-white my-6"></div>
 
         <div className="flex justify-between box-border mt-5 gap-6">
           <img
