@@ -11,6 +11,7 @@ import goultarenalogo from "../../../public/images/goultarenalogo.png";
 import flagFR from "../../../public/images/flg_FR.png";
 import flagUK from "../../../public/images/flg_UK.png";
 import flagES from "../../../public/images/flg_ES.png";
+// import headerBanner from "../../../public/images/banner.jpg";
 
 export function Layout() {
   const { t, i18n } = useTranslation();
@@ -96,15 +97,15 @@ export function Layout() {
           </nav>
           <div className=" w-full h-28 flex flex-col">
             <div className="bg-yellow-900 w-full h-10 flex font-KoHo items-center text-white text-base">
-              <p className="ml-2">[OMG] Hulkyalmao15characs</p>
+              <p className="ml-2">[OMG] Hulkyalmao15cha</p>
             </div>
             <div className="bg-yellow-800 w-full h-full flex items-center">
-              <div className="display flex">
+              <div className="flex">
                 <div
                   className=" bg-no-repeat bg-cover bg-[url('https://res.cloudinary.com/adpinto314/image/upload/v1671040468/thready_profile_pictures/file_thufzh.png')] 
               bg-white h-14 w-14 mx-3 border-4 rounded-b-sm rounded-tr-sm rounded-tl-xl border-yellow-300 drop-shadow-md"
                 />
-                <div className="flex">
+                <div className="flex text-white font-KoHo">
                   <RiMedalFill className="text-white text-xl" /> GOLD III
                 </div>
               </div>
@@ -112,7 +113,12 @@ export function Layout() {
           </div>
         </div>
       </aside>
-      <div className="bg-yellow-700 w-14 h-16 self-end"></div>
+      <div className="flex flex-col w-full h-screen">
+        <div className="bg-no-repeat bg-cover bg-[url('../../../public/images/banner.jpg')] bg-black h-1/6 " />
+
+        <div className="bg-neutral-700 w-full h-screen"></div>
+        <footer className="bg-black w-full h-1/6"></footer>
+      </div>
     </div>
   );
 }
