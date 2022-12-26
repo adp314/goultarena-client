@@ -1,4 +1,5 @@
 import { useTranslation } from "react-i18next";
+import { useState } from "react";
 import "../../i18n";
 import { ImHome } from "react-icons/im";
 import { FiCornerDownRight } from "react-icons/fi";
@@ -26,73 +27,83 @@ export function Layout() {
 
   return (
     <div className="flex">
-      <aside className="bg-neutral-900 sticky left-0 w-56 h-screen box-border flex flex-col items-center justify-start border-solid">
-        <div className="w-full border-2">
-          <img className=" w-1/2" src={goultarenalogo} alt="goultarena_logo" />
+      <aside className=" bg-gradient-to-b from-neutral-900 to-stone-900 w-56 h-screen box-border flex flex-col items-center justify-start border-solid sticky top-0 left-0 md:bg-red-400">
+        <div className="w-full h-44 flex items-center justify-center ml-3">
+          <img className="w-32" src={goultarenalogo} alt="goultarena_logo" />
         </div>
-        <div className="box-border h-1 w-full bg-white my-6"></div>
 
-        <div className="flex justify-between box-border mt-5 gap-6">
+        <div className="flex justify-between box-border mt-6 gap-5 cursor-pointer">
           <img
-            className="w-10 h-auto rounded-md"
+            className="w-8 h-auto rounded-md"
             src={flagFR}
             alt="flag_France"
             onClick={handleClickFR}
           />
           <img
-            className="w-10 h-auto rounded-md"
+            className="w-8 h-auto rounded-md"
             src={flagUK}
             alt="flag_UK"
             onClick={handleClickEN}
           />
           <img
-            className="w-10 h-auto rounded-md"
+            className="w-8 h-auto rounded-md"
             src={flagES}
             alt="flag_ES"
             onClick={handleClickEN}
           />
         </div>
-        {/* //////// */}
-        <div className="flex flex-col h-full w-full justify-between">
-          <nav className="flex flex-col box-border w-full mt-10 gap-5 px-8">
-            <div className="flex font-KoHo text-white uppercase text-xl items-center  gap-2">
-              <ImHome className="text-2xl" /> {t("nav_home")}
+
+        <div className="flex flex-col h-full w-full justify-between ">
+          <nav className="flex flex-col box-border w-full mt-10 gap-5 px-6 cursor-pointer">
+            <div className="flex font-KoHo text-white uppercase text-lg items-center gap-2">
+              <ImHome className="text-2xl" /> <p>{t("nav_home")}</p>
             </div>
+
             <div className="flex flex-col w-full">
-              <div className="flex font-KoHo text-white uppercase text-xl items-center  gap-2">
-                <RiTableAltFill className="text-2xl" /> {t("nav_ladders")}
+              <div className="flex font-KoHo text-white uppercase text-lg items-center gap-2">
+                <RiTableAltFill className="text-2xl" />
+                <p>{t("nav_ladders")}</p>
               </div>
               <div className="text-sm flex text-white items-center  uppercase font-KoHo gap-1 mt-1">
-                <FiCornerDownRight /> {t("nav_ladders3vs3")}
+                <FiCornerDownRight />
+                <p>{t("nav_ladders3vs3")}</p>
               </div>
               <div className="text-sm flex text-white items-center  uppercase font-KoHo gap-1">
-                <FiCornerDownRight /> {t("nav_ladders2vs2")}
+                <FiCornerDownRight />
+                <p>{t("nav_ladders2vs2")}</p>
               </div>
               <div className="text-sm flex text-white items-center  uppercase font-KoHo gap-1">
-                <FiCornerDownRight /> {t("nav_ladders1vs1")}
+                <FiCornerDownRight />
+                <p>{t("nav_ladders1vs1")}</p>
               </div>
             </div>
+
             <div className="flex flex-col">
-              <div className="flex font-KoHo text-white uppercase text-xl items-center  gap-2">
-                <FaAddressBook /> {t("nav_directorybook")}
+              <div className="flex font-KoHo text-white uppercase text-lg items-center gap-2">
+                <FaAddressBook className="text-2xl" />{" "}
+                <p>{t("nav_directorybook")}</p>
               </div>
-              <div className="text-sm flex text-white items-center  uppercase font-KoHo gap-1 mt-1">
-                <FiCornerDownRight /> {t("nav_directoryplayers")}
+              <div className="text-sm flex text-white items-center uppercase font-KoHo gap-1 mt-1">
+                <FiCornerDownRight /> <p>{t("nav_directoryplayers")}</p>
               </div>
-              <div className="text-sm flex text-white items-center  uppercase font-KoHo gap-1">
-                <FiCornerDownRight /> {t("nav_directoryteams")}
+              <div className="text-sm flex text-white items-center uppercase font-KoHo gap-1">
+                <FiCornerDownRight /> <p>{t("nav_directoryteams")}</p>
               </div>
             </div>
-            <div className="flex font-KoHo text-white uppercase text-xl items-center  gap-2">
-              <GiArena className="text-2xl" /> {t("nav_arena")}
+
+            <div className="flex font-KoHo text-white uppercase text-lg items-center gap-2">
+              <GiArena className="text-2xl" /> <p>{t("nav_arena")}</p>
             </div>
-            <div className="flex font-KoHo text-white uppercase text-xl items-center  gap-2">
-              <GiPodium className="text-2xl" /> {t("nav_ranking")}
+
+            <div className="flex font-KoHo text-white uppercase text-lg items-center gap-2">
+              <GiPodium className="text-2xl" /> <p>{t("nav_ranking")}</p>
             </div>
-            <div className="flex font-KoHo text-white uppercase text-xl items-center  gap-2">
-              <MdHelp className="text-2xl" /> {t("nav_help")}
+
+            <div className="flex font-KoHo text-white uppercase text-lg items-center gap-2">
+              <MdHelp className="text-2xl" /> <p>{t("nav_help")}</p>
             </div>
           </nav>
+
           <div className=" w-full h-28 flex flex-col">
             <div className="bg-yellow-900 w-full h-10 flex font-KoHo items-center text-white text-base">
               <p className="ml-2">[OMG] Hulkyalmao15cha</p>
@@ -111,8 +122,8 @@ export function Layout() {
           </div>
         </div>
       </aside>
-      <div className="flex flex-col w-full h-screen">
-        <div className="bg-no-repeat bg-cover bg-[url('../../../public/images/banner.jpg')] bg-black h-1/6 " />
+      <div className="flex flex-col w-full h-1000px">
+        <div className="bg-no-repeat bg-top bg-[url('../../../public/images/banner.jpg')] bg-black w-full h-40 bg-cover" />
 
         <div className="bg-neutral-700 w-full h-screen"></div>
         <footer className="bg-black w-full h-1/6"></footer>
