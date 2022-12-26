@@ -1,5 +1,4 @@
 import { useTranslation } from "react-i18next";
-import { useState } from "react";
 import "../../i18n";
 import { ImHome } from "react-icons/im";
 import { FiCornerDownRight } from "react-icons/fi";
