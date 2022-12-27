@@ -3,7 +3,7 @@ import "../../i18n";
 import { ImHome } from "react-icons/im";
 import { FiCornerDownRight } from "react-icons/fi";
 import { RiTableAltFill, RiMedalFill } from "react-icons/ri";
-
+import { Link, useNavigate } from "react-router-dom";
 import { FaAddressBook } from "react-icons/fa";
 import { MdHelp } from "react-icons/Md";
 import { GiPodium, GiArena } from "react-icons/Gi";
@@ -14,6 +14,7 @@ import flagES from "../../../public/images/flg_ES.png";
 
 export function NavLayout() {
   const { t, i18n } = useTranslation();
+  const navigate = useNavigate();
 
   function handleClickFR() {
     i18n.changeLanguage("fr");
@@ -111,8 +112,13 @@ export function NavLayout() {
                 className=" bg-no-repeat bg-cover bg-[url('https://res.cloudinary.com/adpinto314/image/upload/v1671040468/thready_profile_pictures/file_thufzh.png')] 
               bg-white h-14 w-14 mx-3 border-4 rounded-b-sm rounded-tr-sm rounded-tl-xl border-yellow-300 drop-shadow-md"
               />
-              <div className="flex text-white font-KoHo">
-                <RiMedalFill className="text-white text-xl" /> GOLD III
+              <div className="flex flex-col justify-start text-white font-KoHo">
+                <div>
+                  <RiMedalFill className="text-white text-xl" /> <p>GOLD III</p>
+                </div>
+                <Link to="/signin" className="text-white">
+                  Sign in here !
+                </Link>
               </div>
             </div>
           </div>

@@ -5,6 +5,7 @@ import "./App.css";
 import "./i18n";
 import { Home } from "./pages/Home/index";
 import { NotAllowedView } from "./components/NotAllowedView";
+import { UserSignIn } from "./pages/UserSignIn";
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
             <Routes>
               <Route path="/" element={<Navigate to="/home" />} />
               <Route path="/home" element={<Home />} />
+              <Route path="/signin" element={<UserSignIn />} />
             </Routes>
           </BrowserRouter>
         </BrowserView>

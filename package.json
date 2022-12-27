@@ -9,6 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@auth0/auth0-react": "^1.12.0",
     "axios": "^1.2.1",
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
