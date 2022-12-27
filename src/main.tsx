@@ -12,7 +12,7 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
       <Auth0Provider
         domain="goultarena.eu.auth0.com"
         clientId="YfvoocEqSWvbHVaVODpwWK1LwSWF5C04"
-        redirectUri={"http://127.0.0.1:5173/signin"}
+        redirectUri={"http://127.0.0.1:5174/signin"}
         audience="Goutarena unique identifier"
         scope="openid profile email"
       >

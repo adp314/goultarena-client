@@ -23,7 +23,7 @@ export function UserSignIn() {
       const token = await getAccessTokenSilently();
       const response = await axios.get("http://localhost:4000/protected", {
         headers: {
-          autorization: `Bearer ${token}`,
+          authorization: `Bearer ${token}`,
         },
       });
       console.log(response.data);
