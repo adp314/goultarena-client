@@ -11,5 +11,8 @@
   "nav_directoryteams": "Teams",
   "nav_arena": "Arena Mode",
   "nav_ranking": "Ranking",
-  "nav_help": "Help"
+  "nav_help": "Help",
+
+  "not_allowed_view_text": "mobile or tablet detected, not allowed.",
+  "not_allowed_goultarenatxt": "Goultarena.com still works in progress, and a new version for mobile and tablet is coming soon."
 }

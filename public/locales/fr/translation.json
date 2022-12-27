@@ -11,5 +11,8 @@
   "nav_directoryteams": "Équipes",
   "nav_arena": "Mode Arène",
   "nav_ranking": "Ranking",
-  "nav_help": "Aide"
+  "nav_help": "Aide",
+
+  "not_allowed_view_text": "tablette ou mobile détecté, non autorisé.",
+  "not_allowed_goultarenatxt": "Goultarena.com reste en work in progress, une nouvelle version pour mobile et tablette arrive bientôt."
 }
