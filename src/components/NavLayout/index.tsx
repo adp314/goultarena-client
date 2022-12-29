@@ -11,6 +11,7 @@ import goultarenalogo from "../../../public/images/goultarenalogo.png";
 import flagFR from "../../../public/images/flg_FR.png";
 import flagUK from "../../../public/images/flg_UK.png";
 import flagES from "../../../public/images/flg_ES.png";
+import { NavUserSection } from "../NavUserSection";
 
 export function NavLayout() {
   const { t, i18n } = useTranslation();
@@ -54,7 +55,9 @@ export function NavLayout() {
       <div className="flex flex-col h-full w-full justify-between ">
         <nav className="flex flex-col box-border w-full mt-10 gap-5 px-6 cursor-pointer">
           <div className="flex font-KoHo text-white uppercase text-lg items-center gap-2">
-            <ImHome className="text-2xl" /> <p>{t("nav_home")}</p>
+            <Link to="/home">
+              <ImHome className="text-2xl" /> <p>{t("nav_home")}</p>
+            </Link>
           </div>
 
           <div className="flex flex-col w-full">
@@ -108,7 +111,8 @@ export function NavLayout() {
           </div>
           <div className="bg-yellow-800 w-full h-full flex items-center">
             <div className="flex">
-              <div
+              <NavUserSection />
+              {/* <div
                 className=" bg-no-repeat bg-cover bg-[url('https://res.cloudinary.com/adpinto314/image/upload/v1671040468/thready_profile_pictures/file_thufzh.png')] 
               bg-white h-14 w-14 mx-3 border-4 rounded-b-sm rounded-tr-sm rounded-tl-xl border-yellow-300 drop-shadow-md"
               />
@@ -119,7 +123,7 @@ export function NavLayout() {
                 <Link to="/signin" className="text-white">
                   Sign in here !
                 </Link>
-              </div>
+              </div> */}
             </div>
           </div>
         </div>

@@ -26,6 +26,7 @@ export function UserSignIn() {
           authorization: `Bearer ${token}`,
         },
       });
+      console.log(token);
       console.log(response.data);
     } catch (error: any) {
       console.log(error.message);
