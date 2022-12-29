@@ -26,12 +26,13 @@ export function NavLayout() {
   }
 
   return (
-    <aside className=" bg-gradient-to-b from-neutral-900 to-stone-900 w-56 h-screen box-border flex flex-col items-center justify-start border-solid sticky top-0 left-0 md:bg-red-400">
-      <div className="w-full h-44 flex items-center justify-center ml-3">
-        <img className="w-32" src={goultarenalogo} alt="goultarena_logo" />
+    <aside className=" bg-[#191919] w-64 h-screen box-border flex flex-col items-center justify-start">
+      <div className="w-full h-44 flex items-center justify-center ml-6 mt-2">
+        <img className="w-28" src={goultarenalogo} alt="goultarena_logo" />
       </div>
 
-      <div className="flex justify-between box-border mt-6 gap-5 cursor-pointer">
+      <div className="w-full h-0.5 bg-white mt-2 opacity-10"></div>
+      <div className="flex justify-between box-border my-5 gap-5 cursor-pointer">
         <img
           className="w-8 h-auto rounded-md"
           src={flagFR}
@@ -51,12 +52,14 @@ export function NavLayout() {
           onClick={handleClickEN}
         />
       </div>
+      <div className="w-full h-0.5 bg-white opacity-10"></div>
 
       <div className="flex flex-col h-full w-full justify-between ">
-        <nav className="flex flex-col box-border w-full mt-10 gap-5 px-6 cursor-pointer">
+        <nav className="flex flex-col box-border w-full mt-12 gap-5 px-6 cursor-pointer">
           <div className="flex font-KoHo text-white uppercase text-lg items-center gap-2">
+            <ImHome className="text-2xl" />
             <Link to="/home">
-              <ImHome className="text-2xl" /> <p>{t("nav_home")}</p>
+              <p>{t("nav_home")}</p>
             </Link>
           </div>
 
@@ -106,10 +109,10 @@ export function NavLayout() {
         </nav>
 
         <div className=" w-full h-28 flex flex-col">
-          <div className="bg-yellow-900 w-full h-10 flex font-KoHo items-center text-white text-base">
+          <div className="bg-amber-900 w-full h-10 flex font-KoHo items-center text-white text-base">
             <p className="ml-2">[OMG] Hulkyalmao15cha</p>
           </div>
-          <div className="bg-yellow-800 w-full h-full flex items-center">
+          <div className="bg-amber-800 w-full h-full flex items-center justify-center">
             <div className="flex">
               <NavUserSection />
               {/* <div

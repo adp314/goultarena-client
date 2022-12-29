@@ -3,6 +3,25 @@
 @config "../tailwind.config.cjs";
 
 @tailwind base;
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #44403c white;
+}
+
+*::-webkit-scrollbar {
+  width: 15px;
+}
+
+*::-webkit-scrollbar-track {
+  background: #44403c;
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: white;
+  border-radius: 15px;
+  border: 3px solid #44403c;
+}
+
 @tailwind components;
 @tailwind utilities;
-

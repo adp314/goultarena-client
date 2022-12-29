@@ -2,10 +2,10 @@ import goultarenalogo from "../../../public/images/goultarenalogo.png";
 
 export function FooterLayout() {
   return (
-    <footer className="p-4 bg-neutral-900 text-grey md:py-8">
+    <footer className="p-24 bg-neutral-800 text-grey md:py-8">
       <div className="flex items-center justify-between">
         <a href="#" className="flex items-center mb-4 sm:mb-0">
-          <img src={goultarenalogo} className="mr-3 h-8" alt="Flowbite Logo" />
+          <img src={goultarenalogo} className="mr-3 h-8" alt="Goultarena Logo" />
           <span className="self-center text-2xl font-semibold whitespace-nowrap text-gray-400">
             Goultarena
           </span>
