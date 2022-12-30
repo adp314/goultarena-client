@@ -6,6 +6,7 @@ const Auth0ProviderWithNavigate: React.FC<{ children: React.ReactNode }> = ({
 }) => {
   const domain = import.meta.env.VITE_REACT_APP_AUTH0_DOMAIN as string;
   const clientId = import.meta.env.VITE_REACT_APP_AUTH0_CLIENT_ID as string;
+  const audience = import.meta.env.VITE_REACT_APP_AUTH0_AUDIENCE as string;
 
   const navigate = useNavigate();
 
@@ -19,6 +20,7 @@ const Auth0ProviderWithNavigate: React.FC<{ children: React.ReactNode }> = ({
       clientId={clientId}
       redirectUri={window.location.origin}
       onRedirectCallback={onRedirectCallback}
+      audience={audience}
     >
       {children}
     </Auth0Provider>

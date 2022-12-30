@@ -9,6 +9,7 @@ import { NotAllowedView } from "./components/NotAllowedView";
 import { UserSignIn } from "./pages/UserSignIn";
 import { BrowserRouter } from "react-router-dom";
 import Auth0ProviderWithNavigate from "./auth/Auth0-provider-with-navigate";
+import ExternalApi from "./pages/ExternalApi";
 // import { ProtectedRoute } from "./components/ProtectedRoute";
 
 const loadingMarkup = <div>Loading translation ...</div>;
@@ -25,6 +26,7 @@ function App() {
                 <Route path="/home" element={<Home />} />
                 <Route path="/signin" element={<UserSignIn />} />
                 <Route path="/usertest" element={<UserTest />} />
+                <Route path="/externalapi" element={<ExternalApi />} />
               </Routes>
             </BrowserView>
             {/* ////// */}
