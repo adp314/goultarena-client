@@ -1,6 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { Auth0Provider, useAuth0 } from "@auth0/auth0-react";
-import { useState, useEffect } from "react";
+import { Auth0Provider } from "@auth0/auth0-react";
 
 const Auth0ProviderWithNavigate: React.FC<{ children: React.ReactNode }> = ({
   children,
@@ -8,19 +7,6 @@ const Auth0ProviderWithNavigate: React.FC<{ children: React.ReactNode }> = ({
   const domain = import.meta.env.VITE_REACT_APP_AUTH0_DOMAIN as string;
   const clientId = import.meta.env.VITE_REACT_APP_AUTH0_CLIENT_ID as string;
   const audience = import.meta.env.VITE_REACT_APP_AUTH0_AUDIENCE as string;
-
-  const { user, isAuthenticated } = useAuth0();
-
-  const [loggedSubtoken, setLoggedSubtoken] = useState("");
-
-  useEffect(() => {
-    if (isAuthenticated && user && user.sub) {
-      setLoggedSubtoken(user.sub);
-      localStorage.setItem("subtoken", loggedSubtoken);
-    } else {
-      setLoggedSubtoken("");
-    }
-  }, [isAuthenticated]);
 
   const navigate = useNavigate();
 
