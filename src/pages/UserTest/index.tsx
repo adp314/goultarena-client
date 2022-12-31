@@ -3,7 +3,7 @@ import { useAuth0 } from "@auth0/auth0-react";
 import { FooterLayout } from "../../components/FooterLayout";
 
 export function UserTest() {
-  const { user = {} } = useAuth0();
+  const { user = {}, } = useAuth0();
   const { name, picture, email } = user;
 
   return (
