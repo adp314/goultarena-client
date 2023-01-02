@@ -11,7 +11,7 @@ export function NavUserLogged() {
       <button
         className="text-white bg-neutral-500"
         onClick={() => {
-          localStorage.clear;
+          localStorage.clear();
           logout({
             returnTo: window.location.origin,
           });
