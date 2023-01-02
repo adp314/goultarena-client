@@ -6,57 +6,54 @@ import axios from "axios";
 
 export function Home() {
   const { user, isLoading, isAuthenticated } = useAuth0();
-  const [loggedSubId, setLoggedSubId] = useState<string | null | undefined>("");
   const [isUpdated, setIsUpdated] = useState<boolean>(false);
   const [UserDataFromAuth0ToPut, setUserDataFromAuth0ToPut] = useState({
-    mail: "",
+    email: "",
     sub: "",
-    coutryLocation: "",
-    Auth0lastConnexion: "",
+    countryLocation: "",
+    auth0lastConnexion: "",
   });
 
   useEffect(() => {
     if (user) {
-      setLoggedSubId(user?.sub);
-      if (loggedSubId) {
-        localStorage.setItem("subIdAuth", loggedSubId);
-      }
-    } else if (!user) {
-      localStorage.setItem("subIdAuth", "not user logged !");
+      localStorage.setItem("subIdAuth", user?.sub as string);
     }
   }, [user]);
 
   useEffect(() => {
-    if (isLoading === false && isAuthenticated === true) {
+    if (user && isAuthenticated === true) {
       setUserDataFromAuth0ToPut({
-        mail: user?.email || "",
-        sub: user?.sub || "",
-        coutryLocation: user?.country_location || "",
-        Auth0lastConnexion: user?.updated_at || "",
+        email: user.email as string,
+        sub: user.sub as string,
+        countryLocation: user.country_location as string,
+        auth0lastConnexion: user.updated_at as string,
       });
-      setIsUpdated(!isUpdated);
-    } else if (isLoading === false && isAuthenticated === false) {
-      setIsUpdated(isUpdated);
     }
-  }, [isAuthenticated]);
+    if (user && isAuthenticated === true) {
+      setIsUpdated(true);
+    } else if (user && isAuthenticated === false) {
+      setIsUpdated(false);
+    }
+  }, [user]);
 
   console.log(UserDataFromAuth0ToPut);
-  console.log(loggedSubId);
-  console.log(`auth0 is updated : ${isUpdated}`);
+  console.log(isUpdated);
 
-  async function SignupOrUpdate() {
-    try {
-      if (isUpdated) {
-        await axios.post(
-          "http://localhost:4000/signup",
-          UserDataFromAuth0ToPut
-        );
+  useEffect(() => {
+    async function SignupOrUpdate() {
+      try {
+        if (isUpdated) {
+          await axios.post(
+            "http://localhost:4000/signup",
+            UserDataFromAuth0ToPut
+          );
+        }
+      } catch (error) {
+        console.log(error);
       }
-    } catch (error) {
-      console.log(error);
     }
-  }
-  // SignupOrUpdate()
+    SignupOrUpdate();
+  }, [user, isUpdated === true]);
 
   return (
     <GlobalLayout
