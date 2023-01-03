@@ -43,10 +43,7 @@ export function Home() {
     async function SignupOrUpdate() {
       try {
         if (isUpdated) {
-          await axios.post(
-            "http://localhost:4000/signup",
-            UserDataFromAuth0ToPut
-          );
+          await axios.put("http://localhost:4000/updateorcreate", UserDataFromAuth0ToPut);
         }
       } catch (error) {
         console.log(error);
