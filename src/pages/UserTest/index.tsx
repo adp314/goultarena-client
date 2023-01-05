@@ -17,10 +17,15 @@ export function UserTest() {
         const file = target.files[0];
         if (file) {
           const response = await axios.get(
-            "http://localhost:4000/api/uploadimg/postimg"
+            "http://localhost:4000/api/uploadimg/postimg",
+            {
+              params: {
+                key: "keyid",
+              },
+            }
           );
 
-          const { post, key } = await response.data.json();
+          const { post, key } = await response.data;
 
           const formData = new FormData();
           Object.entries({
@@ -39,6 +44,8 @@ export function UserTest() {
       console.log(err);
     }
   };
+
+  const urlImg = `https://goultarena-s3bucket.s3.eu-west-3.amazonaws.com/KROmadSWwSsJkvD_A3RJ9`;
 
   return (
     <GlobalLayout
@@ -67,6 +74,7 @@ export function UserTest() {
                 <input ref={imageRef} type="file" />
                 <button onClick={() => save()}>save</button>
               </div>
+              <img src={`${urlImg}`} className="w-20 h-20 " />
             </div>
           </div>
           <FooterLayout />
