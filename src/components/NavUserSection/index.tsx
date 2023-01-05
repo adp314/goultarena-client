@@ -46,7 +46,7 @@ export function NavUserSection() {
       try {
         if (isUpdated) {
           await axios.put(
-            "http://localhost:4000/updateorcreate",
+            "http://localhost:4000/api/user/updateorcreate",
             UserDataFromAuth0ToPut,
             {
               headers: {
