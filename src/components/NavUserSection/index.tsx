@@ -14,6 +14,11 @@ export function NavUserSection() {
     auth0lastConnexion: "",
   });
 
+  const [fetchedUserData, setFetchedUserData] = useState({
+    userName: "",
+    email: "",
+  });
+
   // set the subIdAuth on localstorage and set the auth0 infos on a state (UserDataFromAuth0ToPut)
 
   useEffect(() => {
@@ -41,7 +46,7 @@ export function NavUserSection() {
       const token = await getAccessTokenSilently();
       try {
         if (isUpdated) {
-          await axios.put(
+          const response = await axios.put(
             "http://localhost:4000/api/user/updateorsignup",
             UserDataFromAuth0ToPut,
             {
@@ -50,6 +55,7 @@ export function NavUserSection() {
               },
             }
           );
+          setFetchedUserData(response.data);
         }
       } catch (error) {
         console.log(error);
@@ -58,5 +64,18 @@ export function NavUserSection() {
     SignupOrUpdate();
   }, [user, isUpdated === true]);
 
-  return isAuthenticated ? <NavUserLogged /> : <NavUserToLog />;
+  console.log(fetchedUserData.userName);
+
+  return (
+    <div className=" w-full h-28 flex flex-col">
+      <div className="bg-amber-900 w-full h-10 flex font-KoHo items-center text-white text-base">
+        <p className="ml-2">[TAG] {fetchedUserData.userName}</p>
+      </div>
+      <div className="bg-amber-800 w-full h-full flex items-center justify-center">
+        <div className="flex">
+          {isAuthenticated ? <NavUserLogged /> : <NavUserToLog />}
+        </div>
+      </div>
+    </div>
+  );
 }

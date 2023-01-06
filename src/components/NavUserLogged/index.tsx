@@ -5,9 +5,8 @@ export function NavUserLogged() {
   const { isAuthenticated, logout } = useAuth0();
 
   return (
-    <div>
-      <Link to="/usertest">user edit test</Link>
-      {isAuthenticated ? <p>logged</p> : <p>not logged</p>}
+    <div className="flex flex-col">
+      <Link to="/user/edit">user edit page</Link>
       <button
         className="text-white bg-neutral-500"
         onClick={() => {

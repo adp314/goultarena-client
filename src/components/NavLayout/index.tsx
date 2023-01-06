@@ -2,8 +2,8 @@ import { useTranslation } from "react-i18next";
 import "../../i18n";
 import { ImHome } from "react-icons/im";
 import { FiCornerDownRight } from "react-icons/fi";
-import { RiTableAltFill, RiMedalFill } from "react-icons/ri";
-import { Link, useNavigate } from "react-router-dom";
+import { RiTableAltFill } from "react-icons/ri";
+import { Link } from "react-router-dom";
 import { FaAddressBook } from "react-icons/fa";
 import { MdHelp } from "react-icons/Md";
 import { GiPodium, GiArena } from "react-icons/Gi";
@@ -15,7 +15,6 @@ import { NavUserSection } from "../NavUserSection";
 
 export function NavLayout() {
   const { t, i18n } = useTranslation();
-  const navigate = useNavigate();
 
   function handleClickFR() {
     i18n.changeLanguage("fr");
@@ -26,7 +25,7 @@ export function NavLayout() {
   }
 
   return (
-    <aside className=" bg-[#191919] w-64 h-screen box-border flex flex-col items-center justify-start">
+    <aside className=" bg-[#181818] w-64 h-screen box-border flex flex-col items-center justify-start">
       <div className="w-full h-44 flex items-center justify-center ml-6 mt-2">
         <img className="w-28" src={goultarenalogo} alt="goultarena_logo" />
       </div>
@@ -55,7 +54,7 @@ export function NavLayout() {
       <div className="w-full h-0.5 bg-white opacity-10"></div>
 
       <div className="flex flex-col h-full w-full justify-between ">
-        <nav className="flex flex-col box-border w-full mt-12 gap-5 px-6 cursor-pointer">
+        <nav className="flex flex-col box-border w-full mt-14 gap-5 px-6 cursor-pointer">
           <div className="flex font-KoHo text-white uppercase text-lg items-center gap-2">
             <ImHome className="text-2xl" />
             <Link to="/home">
@@ -107,29 +106,7 @@ export function NavLayout() {
             <MdHelp className="text-2xl" /> <p>{t("nav_help")}</p>
           </div>
         </nav>
-
-        <div className=" w-full h-28 flex flex-col">
-          <div className="bg-amber-900 w-full h-10 flex font-KoHo items-center text-white text-base">
-            <p className="ml-2">[OMG] Hulkyalmao15cha</p>
-          </div>
-          <div className="bg-amber-800 w-full h-full flex items-center justify-center">
-            <div className="flex">
-              <NavUserSection />
-              {/* <div
-                className=" bg-no-repeat bg-cover bg-[url('https://res.cloudinary.com/adpinto314/image/upload/v1671040468/thready_profile_pictures/file_thufzh.png')] 
-              bg-white h-14 w-14 mx-3 border-4 rounded-b-sm rounded-tr-sm rounded-tl-xl border-yellow-300 drop-shadow-md"
-              />
-              <div className="flex flex-col justify-start text-white font-KoHo">
-                <div>
-                  <RiMedalFill className="text-white text-xl" /> <p>GOLD III</p>
-                </div>
-                <Link to="/signin" className="text-white">
-                  Sign in here !
-                </Link>
-              </div> */}
-            </div>
-          </div>
-        </div>
+        <NavUserSection />
       </div>
     </aside>
   );

@@ -10,31 +10,37 @@ export function UserEdit() {
 
   const imageRef = useRef<HTMLInputElement | null>(null);
 
-  const [formUserEdit, setFormUserEdit] = useState({
+  // const [formUserEdit, setFormUserEdit] = useState({
+  //   userName: "",
+  // });
+
+  const [fetchedUserData, setFetchedUserData] = useState({
     userName: "",
+    email: "",
   });
 
-  const userData = {
-    query: {
-      email: user?.email as string,
-      userName: formUserEdit.userName as string,
-    },
-  };
+  const [userForm, setUserForm] = useState({
+    userName: "",
+    ankamaCharacterUrl: "",
+  });
 
-  const [fetchedUserData, setFetchedUserData] = useState<
-    Record<string, unknown>
-  >({});
+  interface SkinImage {
+    src: string; // url from ankama website (protected)
+    image: string; // base64 image
+  }
 
-  // Get user data with a query param request via the mail
+  const urlImg = `https://goultarena-s3bucket.s3.eu-west-3.amazonaws.com/KROmadSWwSsJkvD_A3RJ9`;
+
+  // Get user data with a query param request via the email
 
   useEffect(() => {
     async function fetchUserData() {
       const token = await getAccessTokenSilently();
       if (user && isAuthenticated === true && isLoading === false) {
         try {
-          if (userData.query) {
+          if (user?.email) {
             const fetchUserResponse = await axios.get(
-              `http://localhost:4000/api/user/fetch?email=${userData.query.email}`,
+              `http://localhost:4000/api/user/fetch?email=${user?.email}`,
               {
                 headers: {
                   Authorization: `Bearer ${token}`,
@@ -49,7 +55,7 @@ export function UserEdit() {
               ]}`
             );
 
-            console.log(`fetchUserData req : ${userData.query.email}`);
+            console.log(`fetchUserData req : ${user?.email}`);
           }
         } catch (err) {
           console.log(err);
@@ -59,7 +65,15 @@ export function UserEdit() {
     fetchUserData();
   }, [user, isAuthenticated === true]);
 
-  const save = async () => {
+  //// function handleChange & handle Submit for the form
+
+  function handleChange(e: ChangeEvent<HTMLInputElement>) {
+    e.preventDefault();
+    setUserForm({ ...userForm, [e.target.name]: e.target.value });
+  }
+
+  async function handleSubmit(e: FormEvent) {
+    e.preventDefault();
     try {
       const target = imageRef?.current;
       if (target && target.files) {
@@ -92,73 +106,113 @@ export function UserEdit() {
     } catch (err) {
       console.log(err);
     }
-  };
-
-  const urlImg = `https://goultarena-s3bucket.s3.eu-west-3.amazonaws.com/KROmadSWwSsJkvD_A3RJ9`;
-
-  async function handleSubmit(e: FormEvent) {
-    e.preventDefault();
-    const token = await getAccessTokenSilently();
     try {
-      const infosToSendForAPI = { ...formUserEdit };
+      const infosToSendForAPI = { ...fetchedUserData };
 
-      const response = await axios.put(
-        `http://localhost:4000/api/user/edit?email=${userData.query.email}`,
-
-        infosToSendForAPI
-      );
+      const response = await axios.put(`http://localhost:4000/api/user/edit`, {
+        ...infosToSendForAPI,
+      });
       console.log(response.data);
     } catch (error) {
       console.log(error);
     }
+    try {
+      const nibApiRes = await fetch(
+        "https://dofuspp.nib.gg/api/skin?url=" + userForm.ankamaCharacterUrl,
+        {
+          method: "GET",
+        }
+      );
+      const nibApiResJSON = (await nibApiRes.json()) as SkinImage;
+      console.log(nibApiResJSON);
+    } catch (error) {
+      console.log(error);
+    }
   }
+  console.log(userForm.userName);
+  console.log(userForm.ankamaCharacterUrl);
 
-  function handleChange(e: ChangeEvent<HTMLInputElement>) {
-    e.preventDefault();
-    setFormUserEdit({ ...formUserEdit, [e.target.name]: e.target.value });
-  }
-  console.log(formUserEdit.userName);
   return (
     <GlobalLayout
       pageContainer={
-        <div>
-          <div className="bg-neutral-900 w-full h-screen text-white font-KoHo flex flex-col justify-center items-center gap-6">
-            <h1>UserEdit pageContainer</h1>
-            <div className="bg-neutral-500 flex flex-col justify-center items-center">
-              <div className="bg-black text-white">
-                <input ref={imageRef} type="file" />
-                <button onClick={() => save()}>save</button>
-              </div>
-              <img src={`${urlImg}`} className="w-20 h-20 " />
-
-              <form onSubmit={handleSubmit}>
-                <label
-                  htmlFor="username"
-                  className="block mb-2 text-sm font-medium text-gray-900 "
-                >
-                  Username
-                </label>
-                <div className="flex">
-                  <span className="inline-flex items-center px-3 text-sm text-gray-900 bg-gray-200 border border-r-0 border-gray-300 rounded-l-md">
-                    @
-                  </span>
-                  <input
-                    type="text"
-                    id="username"
-                    className="rounded-none rounded-r-lg bg-gray-50 border border-gray-300 text-gray-900 flex-1 min-w-0 w-full text-sm p-2.5 "
-                    placeholder="Bonnie Green"
-                    name="userName"
-                    value={formUserEdit.userName}
-                    onChange={handleChange}
+        <div className="w-full h-full flex justify-center">
+          <div className="flex flex-col w-5/6 h-full border-r-2 border-l-2 border-[#111111] box-border">
+            <div className="bg-no-repeat bg-top bg-[url('../../../public/images/banner.jpg')] w-full h-2/6 ma bg-cover drop-shadow-md sticky top-0" />
+            <div className="bg-[#181818] text-white font-KoHo flex flex-col justify-between h-full">
+              <div className=" flex h-full items-center">
+                <div className="flex flex-col h-full w-2/6 items-center">
+                  <h1 className="text-2xl font-KoHo">
+                    {fetchedUserData.userName}
+                  </h1>
+                  <img
+                    src={`${urlImg}`}
+                    className="w-40 rounded shadow-[0_4px_4px_-0px_rgba(0,0,0,0.25)]"
                   />
+                  <div></div>
                 </div>
-                <button type="submit" className="bg-black text-white">
-                  Submit
-                </button>
-              </form>
+                <div className="w-1 h-full bg-white opacity-10 mr-8"></div>
+                <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+                  {/* <label
+                    htmlFor="profileImg"
+                    className="block mb-2 text-sm font-medium text-gray-900 "
+                  >
+                    {" "}
+                    Profile IMG{" "}
+                  </label>
+                  <input ref={imageRef} name="profileImg" type="file" /> */}
+                  <div className="flex flex-col">
+                    <label
+                      htmlFor="username"
+                      className=" mb-1 text-sm font-medium text-white "
+                    >
+                      Username
+                    </label>
+                    <div className="flex">
+                      <span className="inline-flex items-center px-3 text-sm text-gray-900 bg-gray-200 border border-r-0 border-gray-300 rounded-l-md">
+                        @
+                      </span>
+                      <input
+                        type="text"
+                        className="rounded-none rounded-r-lg bg-gray-50 border border-gray-300 text-gray-900 flex-1 min-w-0 w-full text-sm p-2.5 "
+                        name="userName"
+                        placeholder={fetchedUserData.userName}
+                        value={userForm.userName}
+                        onChange={handleChange}
+                      />
+                    </div>
+                  </div>
+                  <div className="flex flex-col">
+                    <label
+                      htmlFor="profileImg"
+                      className="mb-1 text-sm font-medium text-white "
+                    >
+                      Character Img Link
+                    </label>
+                    <div className="flex">
+                      <span className="inline-flex items-center px-3 text-sm text-gray-900 bg-gray-200 border border-r-0 border-gray-300 rounded-l-md">
+                        L
+                      </span>
+                      <input
+                        type="text"
+                        className="rounded-none rounded-r-lg bg-gray-50 border border-gray-300 text-gray-900 flex-1 min-w-0 w-full text-sm p-2.5 "
+                        name="ankamaCharacterUrl"
+                        placeholder="dofus page perso link"
+                        value={userForm.ankamaCharacterUrl}
+                        onChange={handleChange}
+                      />
+                    </div>
+                  </div>
+                  <button
+                    type="submit"
+                    className="bg-white text-black p-2 rounded-lg mt-4"
+                  >
+                    Submit
+                  </button>
+                </form>
+              </div>
             </div>
+            <FooterLayout />
           </div>
-          <FooterLayout />
         </div>
       }
     />
