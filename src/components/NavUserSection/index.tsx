@@ -5,8 +5,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 
 export function NavUserSection() {
-  const { user, isLoading, isAuthenticated, getAccessTokenSilently } =
-    useAuth0();
+  const { user, isAuthenticated, getAccessTokenSilently } = useAuth0();
   const [isUpdated, setIsUpdated] = useState<boolean>(false);
   const [UserDataFromAuth0ToPut, setUserDataFromAuth0ToPut] = useState({
     email: "",
@@ -15,14 +14,12 @@ export function NavUserSection() {
     auth0lastConnexion: "",
   });
 
-  useEffect(() => {
-    if (user) {
-      localStorage.setItem("subIdAuth", user?.sub as string);
-    }
-  }, [user]);
+  // set the subIdAuth on localstorage and set the auth0 infos on a state (UserDataFromAuth0ToPut)
 
   useEffect(() => {
     if (user && isAuthenticated === true) {
+      localStorage.setItem("subIdAuth", user?.sub as string);
+
       setUserDataFromAuth0ToPut({
         email: user.email as string,
         sub: user.sub as string,
@@ -37,8 +34,7 @@ export function NavUserSection() {
     }
   }, [user]);
 
-  console.log(UserDataFromAuth0ToPut);
-  console.log(isUpdated);
+  // Signup with auth0 infos if new user or update infos from auth0
 
   useEffect(() => {
     async function SignupOrUpdate() {
@@ -46,7 +42,7 @@ export function NavUserSection() {
       try {
         if (isUpdated) {
           await axios.put(
-            "http://localhost:4000/api/user/updateorcreate",
+            "http://localhost:4000/api/user/updateorsignup",
             UserDataFromAuth0ToPut,
             {
               headers: {

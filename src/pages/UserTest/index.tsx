@@ -1,14 +1,39 @@
 import { GlobalLayout } from "../../components/LayoutGlobal/index";
 import { useAuth0 } from "@auth0/auth0-react";
 import { FooterLayout } from "../../components/FooterLayout";
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import axios from "axios";
 
 export function UserTest() {
-  const { user } = useAuth0();
-
+  const { user, isAuthenticated, isLoading, getAccessTokenSilently } =
+    useAuth0();
   const imageRef = useRef<HTMLInputElement | null>(null);
+  const actualUserId = {
+    query: {
+      sub: user?.sub,
+    },
+  };
+
+  // useEffect(() => {
+  //   if (user && isAuthenticated === true) {
+  //     async function fetchUserData() {
+  //       try {
+  //         if (userData.data.email) {
+  //           const fetchUserResponse = await axios.get(
+  //             "http://localhost:4000/api/user/fetch",
+  //             userData
+  //           );
+  //           console.log(`fetchUserData Response : ${fetchUserResponse}`);
+  //           console.log(`fetchUserData req : ${userData.data.email}`);
+  //         }
+  //       } catch (err) {
+  //         console.log(err);
+  //       }
+  //     }
+  //     fetchUserData();
+  //   }
+  // }, [user, isAuthenticated === true]);
 
   const save = async () => {
     try {

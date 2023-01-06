@@ -7,6 +7,7 @@ import { Home } from "./pages/Home/index";
 import { UserTest } from "./pages/UserTest/index";
 import { NotAllowedView } from "./components/NotAllowedView";
 import { UserSignIn } from "./pages/UserSignIn";
+import { UserEdit } from "./pages/UserEdit";
 import Auth0ProviderWithNavigate from "./auth/Auth0-provider-with-navigate";
 import ExternalApi from "./pages/ExternalApi";
 // import { ProtectedRoute } from "./components/ProtectedRoute";
@@ -23,6 +24,7 @@ function App() {
               <Route path="/" element={<Home />} />
               <Route path="/home" element={<Home />} />
               <Route path="/signin" element={<UserSignIn />} />
+              <Route path="/user/edit" element={<UserEdit />} />
               <Route path="/usertest" element={<UserTest />} />
               <Route path="/externalapi" element={<ExternalApi />} />
             </Routes>
