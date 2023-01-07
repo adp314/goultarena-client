@@ -10,18 +10,12 @@ export function UserEdit() {
 
   const imageRef = useRef<HTMLInputElement | null>(null);
 
-  // const [formUserEdit, setFormUserEdit] = useState({
-  //   userName: "",
-  // });
-
   const [fetchedUserData, setFetchedUserData] = useState({
-    userName: "",
     email: "",
-  });
-
-  const [userForm, setUserForm] = useState({
     userName: "",
-    ankamaCharacterUrl: "",
+    sub: "",
+    characterSkinUrlPage: "",
+    characterSkinUploaded: ["", ""],
   });
 
   interface SkinImage {
@@ -48,14 +42,6 @@ export function UserEdit() {
               }
             );
             setFetchedUserData(fetchUserResponse.data);
-            console.log(
-              `fetchUserData Response : ${[
-                fetchedUserData.email,
-                fetchedUserData.userName,
-              ]}`
-            );
-
-            console.log(`fetchUserData req : ${user?.email}`);
           }
         } catch (err) {
           console.log(err);
@@ -65,79 +51,119 @@ export function UserEdit() {
     fetchUserData();
   }, [user, isAuthenticated === true]);
 
-  //// function handleChange & handle Submit for the form
+  // function handleChange for the form
 
   function handleChange(e: ChangeEvent<HTMLInputElement>) {
     e.preventDefault();
-    setUserForm({ ...userForm, [e.target.name]: e.target.value });
+    setFetchedUserData({ ...fetchedUserData, [e.target.name]: e.target.value });
   }
+
+  // handle Submit
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
-    try {
-      const target = imageRef?.current;
-      if (target && target.files) {
-        const file = target.files[0];
-        if (file) {
-          const response = await axios.get(
-            "http://localhost:4000/api/uploadimg/postimg",
-            {
-              params: {
-                key: "keyid",
-              },
-            }
-          );
 
-          const { post, key } = await response.data;
+    // profile img
+    // try {
+    //   const target = imageRef?.current;
+    //   if (target && target.files) {
+    //     const file = target.files[0];
+    //     if (file) {
+    //       const response = await axios.get(
+    //         "http://localhost:4000/api/uploadimg/postimg",
+    //         {
+    //           params: {
+    //             key: "keyid",
+    //           },
+    //         }
+    //       );
 
-          const formData = new FormData();
-          Object.entries({
-            ...post.fields,
-            file,
-          }).forEach(([key, value]) => {
-            formData.append(key, value as string | Blob);
-          });
+    //       const { post, key } = await response.data;
 
-          await axios.post(post.url, formData);
-          console.log(imageRef);
-          console.log(file);
-        }
-      }
-    } catch (err) {
-      console.log(err);
-    }
-    try {
-      const infosToSendForAPI = { ...fetchedUserData };
+    //       const formData = new FormData();
+    //       Object.entries({
+    //         ...post.fields,
+    //         file,
+    //       }).forEach(([key, value]) => {
+    //         formData.append(key, value as string | Blob);
+    //       });
 
-      const response = await axios.put(`http://localhost:4000/api/user/edit`, {
-        ...infosToSendForAPI,
-      });
-      console.log(response.data);
-    } catch (error) {
-      console.log(error);
-    }
+    //       await axios.post(post.url, formData);
+    //       console.log(imageRef);
+    //       console.log(file);
+    //     }
+    //   }
+    // } catch (err) {
+    //   console.log(err);
+    // }
+
+    // skin perso
+
     try {
       const nibApiRes = await fetch(
-        "https://dofuspp.nib.gg/api/skin?url=" + userForm.ankamaCharacterUrl,
+        "https://dofuspp.nib.gg/api/skin?url=" +
+          fetchedUserData.characterSkinUrlPage,
         {
           method: "GET",
         }
       );
       const nibApiResJSON = (await nibApiRes.json()) as SkinImage;
+      setFetchedUserData({
+        ...fetchedUserData,
+        characterSkinUploaded: [
+          `${nibApiResJSON.image}`,
+          `${nibApiResJSON.src}`,
+        ],
+      });
       console.log(nibApiResJSON);
     } catch (error) {
       console.log(error);
     }
+
+    // put des infos du state userForm
+
+    // try {
+    //   const token2 = getAccessTokenSilently();
+    //   const headers = {
+    //     Authorization: `Bearer ${token2}`,
+    //   }
+
+    //   const response = await fetch("http://localhost:4000/api/user/edit", {
+    //     method: "PUT",
+    //     body: JSON.stringify(fetchedUserData),
+
+    //   });
+    //   const data = await response.json();
+    //   console.log(`voici ma response de mon put : ${data.sub}`);
+    //   console.log(data);
+    // } catch (error) {
+    //   console.log(error);
+    // }
+
+    try {
+      const token2 = await getAccessTokenSilently();
+      const infosToSendForAPI = { ...fetchedUserData };
+      const putResponse = await axios.put(
+        `http://localhost:4000/api/user/edit`,
+        infosToSendForAPI,
+        {
+          headers: {
+            Authorization: `Bearer ${token2}`,
+          },
+        }
+      );
+      console.log(putResponse.data);
+    } catch (err) {
+      console.log(err);
+    }
   }
-  console.log(userForm.userName);
-  console.log(userForm.ankamaCharacterUrl);
 
   return (
     <GlobalLayout
       pageContainer={
         <div className="w-full h-full flex justify-center">
           <div className="flex flex-col w-5/6 h-full border-r-2 border-l-2 border-[#111111] box-border">
-            <div className="bg-no-repeat bg-top bg-[url('../../../public/images/banner.jpg')] w-full h-2/6 ma bg-cover drop-shadow-md sticky top-0" />
+            <div className="bg-no-repeat bg-top bg-[url('/src/images/banner.jpg')] w-full h-2/6 ma bg-cover drop-shadow-md sticky top-0" />
             <div className="bg-[#181818] text-white font-KoHo flex flex-col justify-between h-full">
               <div className=" flex h-full items-center">
                 <div className="flex flex-col h-full w-2/6 items-center">
@@ -148,7 +174,15 @@ export function UserEdit() {
                     src={`${urlImg}`}
                     className="w-40 rounded shadow-[0_4px_4px_-0px_rgba(0,0,0,0.25)]"
                   />
-                  <div></div>
+                  <div>
+                    <img
+                      alt="character skin"
+                      src={
+                        "data:image/png;base64," +
+                        fetchedUserData.characterSkinUploaded[0]
+                      }
+                    />
+                  </div>
                 </div>
                 <div className="w-1 h-full bg-white opacity-10 mr-8"></div>
                 <form onSubmit={handleSubmit} className="flex flex-col gap-4">
@@ -175,8 +209,8 @@ export function UserEdit() {
                         type="text"
                         className="rounded-none rounded-r-lg bg-gray-50 border border-gray-300 text-gray-900 flex-1 min-w-0 w-full text-sm p-2.5 "
                         name="userName"
-                        placeholder={fetchedUserData.userName}
-                        value={userForm.userName}
+                        // placeholder={fetchedUserData.userName}
+                        value={fetchedUserData.userName}
                         onChange={handleChange}
                       />
                     </div>
@@ -195,9 +229,9 @@ export function UserEdit() {
                       <input
                         type="text"
                         className="rounded-none rounded-r-lg bg-gray-50 border border-gray-300 text-gray-900 flex-1 min-w-0 w-full text-sm p-2.5 "
-                        name="ankamaCharacterUrl"
+                        name="characterSkinUrlPage"
                         placeholder="dofus page perso link"
-                        value={userForm.ankamaCharacterUrl}
+                        value={fetchedUserData.characterSkinUrlPage}
                         onChange={handleChange}
                       />
                     </div>

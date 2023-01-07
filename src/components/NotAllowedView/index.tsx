@@ -1,4 +1,4 @@
-import goultarenalogo from "../../../public/images/goultarenalogo.png";
+import goultarenalogo from "../../images/goultarenalogo.png";
 import { useTranslation } from "react-i18next";
 import { HiRefresh } from "react-icons/Hi";
 import "../../i18n";

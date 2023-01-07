@@ -1,14 +1,12 @@
 import { GlobalLayout } from "../../components/LayoutGlobal/index";
 import { FooterLayout } from "../../components/FooterLayout";
 
-
 export function Home() {
-
   return (
     <GlobalLayout
       pageContainer={
         <div className=" w-full h-full">
-          <div className="bg-no-repeat bg-top bg-[url('../../../public/images/banner.jpg')] w-full h-36 ma bg-cover drop-shadow-md sticky top-0" />
+          <div className="bg-no-repeat bg-top bg-[url('/src/images/banner.jpg')] w-full h-36 ma bg-cover drop-shadow-md sticky top-0" />
 
           <div className="bg-[#1C1917] text-white font-KoHo flex flex-col justify-between h-full">
             <p className=" text-4xl px-24 py-8">

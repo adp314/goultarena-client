@@ -7,10 +7,10 @@ import { Link } from "react-router-dom";
 import { FaAddressBook } from "react-icons/fa";
 import { MdHelp } from "react-icons/Md";
 import { GiPodium, GiArena } from "react-icons/Gi";
-import goultarenalogo from "../../../public/images/goultarenalogo.png";
-import flagFR from "../../../public/images/flg_FR.png";
-import flagUK from "../../../public/images/flg_UK.png";
-import flagES from "../../../public/images/flg_ES.png";
+import goultarenalogo from "../../images/goultarenalogo.png";
+import flagFR from "../../images/flg_FR.png";
+import flagUK from "../../images/flg_UK.png";
+import flagES from "../../images/flg_ES.png";
 import { NavUserSection } from "../NavUserSection";
 
 export function NavLayout() {
