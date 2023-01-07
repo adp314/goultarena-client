@@ -2,6 +2,8 @@ import { GlobalLayout } from "../../components/LayoutGlobal/index";
 import { useAuth0 } from "@auth0/auth0-react";
 import { FooterLayout } from "../../components/FooterLayout";
 import { useEffect, useState, useRef, FormEvent, ChangeEvent } from "react";
+import { BiRefresh } from "react-icons/Bi";
+import api from "../../lib/api";
 import axios from "axios";
 
 export function UserEdit() {
@@ -14,6 +16,8 @@ export function UserEdit() {
     email: "",
     userName: "",
     sub: "",
+    profileImg: "",
+    keyProfileImg: "",
     characterSkinUrlPage: "",
     characterSkinUploaded: ["", ""],
   });
@@ -22,6 +26,8 @@ export function UserEdit() {
     src: string; // url from ankama website (protected)
     image: string; // base64 image
   }
+
+  const [updatedCharacterUpload, setUpdatedCharacterUpload] = useState(false);
 
   const urlImg = `https://goultarena-s3bucket.s3.eu-west-3.amazonaws.com/KROmadSWwSsJkvD_A3RJ9`;
 
@@ -58,47 +64,10 @@ export function UserEdit() {
     setFetchedUserData({ ...fetchedUserData, [e.target.name]: e.target.value });
   }
 
-  // handle Submit
+  // handle Character change ,request api nib.gg
 
-  async function handleSubmit(e: FormEvent) {
+  async function handleCharacterLink(e: any) {
     e.preventDefault();
-
-    // profile img
-    // try {
-    //   const target = imageRef?.current;
-    //   if (target && target.files) {
-    //     const file = target.files[0];
-    //     if (file) {
-    //       const response = await axios.get(
-    //         "http://localhost:4000/api/uploadimg/postimg",
-    //         {
-    //           params: {
-    //             key: "keyid",
-    //           },
-    //         }
-    //       );
-
-    //       const { post, key } = await response.data;
-
-    //       const formData = new FormData();
-    //       Object.entries({
-    //         ...post.fields,
-    //         file,
-    //       }).forEach(([key, value]) => {
-    //         formData.append(key, value as string | Blob);
-    //       });
-
-    //       await axios.post(post.url, formData);
-    //       console.log(imageRef);
-    //       console.log(file);
-    //     }
-    //   }
-    // } catch (err) {
-    //   console.log(err);
-    // }
-
-    // skin perso
-
     try {
       const nibApiRes = await fetch(
         "https://dofuspp.nib.gg/api/skin?url=" +
@@ -115,43 +84,63 @@ export function UserEdit() {
           `${nibApiResJSON.src}`,
         ],
       });
+      if (fetchedUserData.characterSkinUploaded) {
+        setUpdatedCharacterUpload(true);
+        console.log(updatedCharacterUpload);
+      }
       console.log(nibApiResJSON);
     } catch (error) {
       console.log(error);
     }
+  }
 
-    // put des infos du state userForm
+  // handle Submit form
 
-    // try {
-    //   const token2 = getAccessTokenSilently();
-    //   const headers = {
-    //     Authorization: `Bearer ${token2}`,
-    //   }
+  async function handleSubmit(e: FormEvent) {
+    e.preventDefault();
 
-    //   const response = await fetch("http://localhost:4000/api/user/edit", {
-    //     method: "PUT",
-    //     body: JSON.stringify(fetchedUserData),
+    // profile img
+    try {
+      const target = imageRef?.current;
 
-    //   });
-    //   const data = await response.json();
-    //   console.log(`voici ma response de mon put : ${data.sub}`);
-    //   console.log(data);
-    // } catch (error) {
-    //   console.log(error);
-    // }
+      if (target && target.files) {
+        const file = target.files[0];
+        if (file) {
+          const response = await fetch(
+            `http://localhost:4000/api/uploadimg/postimg?sKey=` +
+              fetchedUserData.keyProfileImg,
+            {
+              method: "GET",
+            }
+          );
+
+          const { post, key } = await response.json();
+
+          const formData = new FormData();
+          Object.entries({
+            ...post.fields,
+            file,
+          }).forEach(([key, value]) => {
+            formData.append(key, value as string | Blob);
+          });
+
+          await axios.post(post.url, formData);
+
+          setFetchedUserData({ ...fetchedUserData, keyProfileImg: key });
+        }
+      }
+    } catch (err) {
+      console.log(err);
+    }
+
+    // axios.put infos of the state fetchedUserData
 
     try {
-      const token2 = await getAccessTokenSilently();
+      const token = await getAccessTokenSilently();
       const infosToSendForAPI = { ...fetchedUserData };
-      const putResponse = await axios.put(
-        `http://localhost:4000/api/user/edit`,
-        infosToSendForAPI,
-        {
-          headers: {
-            Authorization: `Bearer ${token2}`,
-          },
-        }
-      );
+      const putResponse = await api
+        .authorized(token)
+        .put("/user/edit", infosToSendForAPI);
       console.log(putResponse.data);
     } catch (err) {
       console.log(err);
@@ -171,8 +160,8 @@ export function UserEdit() {
                     {fetchedUserData.userName}
                   </h1>
                   <img
-                    src={`${urlImg}`}
-                    className="w-40 rounded shadow-[0_4px_4px_-0px_rgba(0,0,0,0.25)]"
+                    src={`https://goultarena-aws3.s3.eu-west-3.amazonaws.com/${fetchedUserData.keyProfileImg}`}
+                    className="w-40 h-40 rounded shadow-[0_4px_4px_-0px_rgba(0,0,0,0.25)]"
                   />
                   <div>
                     <img
@@ -222,7 +211,7 @@ export function UserEdit() {
                     >
                       Character Img Link
                     </label>
-                    <div className="flex">
+                    <div className="flex ">
                       <span className="inline-flex items-center px-3 text-sm text-gray-900 bg-gray-200 border border-r-0 border-gray-300 rounded-l-md">
                         L
                       </span>
@@ -234,7 +223,25 @@ export function UserEdit() {
                         value={fetchedUserData.characterSkinUrlPage}
                         onChange={handleChange}
                       />
+                      <BiRefresh
+                        onClick={handleCharacterLink}
+                        className="text-3xl self-center ml-2 cursor-pointer"
+                      />
                     </div>
+                  </div>
+                  <div>
+                    <label
+                      className="mb-2 text-sm font-medium text-white"
+                      htmlFor="user_avatar"
+                    >
+                      Upload file
+                    </label>
+                    <input
+                      className=" w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50  focus:outline-none"
+                      name="user_avatar"
+                      type="file"
+                      ref={imageRef}
+                    />
                   </div>
                   <button
                     type="submit"
