@@ -11,25 +11,24 @@ export function UserEdit() {
     useAuth0();
 
   const imageRef = useRef<HTMLInputElement | null>(null);
+  const characterUrlRef = useRef<HTMLInputElement | null>(null);
 
   const [fetchedUserData, setFetchedUserData] = useState({
     email: "",
     userName: "",
     sub: "",
-    profileImg: "",
     keyProfileImg: "",
-    characterSkinUrlPage: "",
     characterSkinUploaded: ["", ""],
+    description: "",
   });
+
+  const [isLoadingSubmit, setIsLoadingSubmit] = useState(false);
+  const [isLoadingCharacterLink, setIsLoadingCharacterLink] = useState(false);
 
   interface SkinImage {
     src: string; // url from ankama website (protected)
     image: string; // base64 image
   }
-
-  const [updatedCharacterUpload, setUpdatedCharacterUpload] = useState(false);
-
-  const urlImg = `https://goultarena-s3bucket.s3.eu-west-3.amazonaws.com/KROmadSWwSsJkvD_A3RJ9`;
 
   // Get user data with a query param request via the email
 
@@ -59,7 +58,7 @@ export function UserEdit() {
 
   // function handleChange for the form
 
-  function handleChange(e: ChangeEvent<HTMLInputElement>) {
+  function handleChange(e: any) {
     e.preventDefault();
     setFetchedUserData({ ...fetchedUserData, [e.target.name]: e.target.value });
   }
@@ -68,27 +67,30 @@ export function UserEdit() {
 
   async function handleCharacterLink(e: any) {
     e.preventDefault();
+    setIsLoadingCharacterLink(true);
+    const characterUrlTarget = characterUrlRef?.current?.value;
+    console.log(characterUrlTarget);
     try {
-      const nibApiRes = await fetch(
-        "https://dofuspp.nib.gg/api/skin?url=" +
-          fetchedUserData.characterSkinUrlPage,
-        {
-          method: "GET",
+      if (characterUrlTarget) {
+        const nibApiRes = await fetch(
+          "https://dofuspp.nib.gg/api/skin?url=" + characterUrlTarget,
+          {
+            method: "GET",
+          }
+        );
+        const nibApiResJSON = (await nibApiRes.json()) as SkinImage;
+        setFetchedUserData({
+          ...fetchedUserData,
+          characterSkinUploaded: [
+            `${nibApiResJSON.image}`,
+            `${nibApiResJSON.src}`,
+          ],
+        });
+        if (fetchedUserData.characterSkinUploaded) {
         }
-      );
-      const nibApiResJSON = (await nibApiRes.json()) as SkinImage;
-      setFetchedUserData({
-        ...fetchedUserData,
-        characterSkinUploaded: [
-          `${nibApiResJSON.image}`,
-          `${nibApiResJSON.src}`,
-        ],
-      });
-      if (fetchedUserData.characterSkinUploaded) {
-        setUpdatedCharacterUpload(true);
-        console.log(updatedCharacterUpload);
+        console.log(nibApiResJSON);
       }
-      console.log(nibApiResJSON);
+      setIsLoadingCharacterLink(false);
     } catch (error) {
       console.log(error);
     }
@@ -98,6 +100,8 @@ export function UserEdit() {
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
+    setIsLoadingSubmit(true);
+    let infosToSendForAPI = { ...fetchedUserData };
 
     // profile img
     try {
@@ -127,6 +131,8 @@ export function UserEdit() {
           await axios.post(post.url, formData);
 
           setFetchedUserData({ ...fetchedUserData, keyProfileImg: key });
+
+          infosToSendForAPI = { ...fetchedUserData, keyProfileImg: key };
         }
       }
     } catch (err) {
@@ -137,11 +143,13 @@ export function UserEdit() {
 
     try {
       const token = await getAccessTokenSilently();
-      const infosToSendForAPI = { ...fetchedUserData };
+      // const infosToSendForAPI = { ...fetchedUserData };
+
       const putResponse = await api
         .authorized(token)
         .put("/user/edit", infosToSendForAPI);
       console.log(putResponse.data);
+      setIsLoadingSubmit(false);
     } catch (err) {
       console.log(err);
     }
@@ -153,103 +161,132 @@ export function UserEdit() {
         <div className="w-full h-full flex justify-center">
           <div className="flex flex-col w-5/6 h-full border-r-2 border-l-2 border-[#111111] box-border">
             <div className="bg-no-repeat bg-top bg-[url('/src/images/banner.jpg')] w-full h-2/6 ma bg-cover drop-shadow-md sticky top-0" />
-            <div className="bg-[#181818] text-white font-KoHo flex flex-col justify-between h-full">
-              <div className=" flex h-full items-center">
-                <div className="flex flex-col h-full w-2/6 items-center">
-                  <h1 className="text-2xl font-KoHo">
-                    {fetchedUserData.userName}
-                  </h1>
-                  <img
-                    src={`https://goultarena-aws3.s3.eu-west-3.amazonaws.com/${fetchedUserData.keyProfileImg}`}
-                    className="w-40 h-40 rounded shadow-[0_4px_4px_-0px_rgba(0,0,0,0.25)]"
-                  />
-                  <div>
-                    <img
-                      alt="character skin"
-                      src={
-                        "data:image/png;base64," +
-                        fetchedUserData.characterSkinUploaded[0]
-                      }
-                    />
-                  </div>
-                </div>
-                <div className="w-1 h-full bg-white opacity-10 mr-8"></div>
-                <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-                  {/* <label
-                    htmlFor="profileImg"
-                    className="block mb-2 text-sm font-medium text-gray-900 "
-                  >
-                    {" "}
-                    Profile IMG{" "}
-                  </label>
-                  <input ref={imageRef} name="profileImg" type="file" /> */}
+            <div className="bg-[#181818] text-white font-KoHo flex justify-evenly h-full">
+              <div className="flex justify-center items-center ">
+                <img
+                  alt="character skin"
+                  src={
+                    "data:image/png;base64," +
+                    fetchedUserData.characterSkinUploaded[0]
+                  }
+                />
+              </div>
+              <div className="w-1 h-full bg-white opacity-5"></div>
+              <div className=" flex justify-center items-center mt-8 mb-10">
+                <form
+                  onSubmit={handleSubmit}
+                  className="flex flex-col gap-4 pl-4 pr-4"
+                >
                   <div className="flex flex-col">
                     <label
                       htmlFor="username"
-                      className=" mb-1 text-sm font-medium text-white "
+                      className="mb-2 text-lg italic font-KoHo font-medium text-white"
                     >
                       Username
                     </label>
                     <div className="flex">
-                      <span className="inline-flex items-center px-3 text-sm text-gray-900 bg-gray-200 border border-r-0 border-gray-300 rounded-l-md">
+                      <span className="flex items-center px-3 text-base text-black bg-gray-200 border border-r-0 border-gray-300 rounded-l-md">
                         @
                       </span>
                       <input
                         type="text"
-                        className="rounded-none rounded-r-lg bg-gray-50 border border-gray-300 text-gray-900 flex-1 min-w-0 w-full text-sm p-2.5 "
+                        className="rounded-none rounded-r-lg font-KoHo text-base bg-gray-50 border border-gray-300 text-black flex-1 min-w-0 w-full p-2.5 "
                         name="userName"
-                        // placeholder={fetchedUserData.userName}
                         value={fetchedUserData.userName}
                         onChange={handleChange}
+                        maxLength={15}
                       />
                     </div>
                   </div>
                   <div className="flex flex-col">
                     <label
                       htmlFor="profileImg"
-                      className="mb-1 text-sm font-medium text-white "
+                      className="mb-2 text-lg italic font-KoHo font-medium text-white"
                     >
-                      Character Img Link
+                      Perso page link
                     </label>
                     <div className="flex ">
-                      <span className="inline-flex items-center px-3 text-sm text-gray-900 bg-gray-200 border border-r-0 border-gray-300 rounded-l-md">
+                      <span className="flex items-center px-3 text-base text-black bg-gray-200 border border-r-0 border-gray-300 rounded-l-md">
                         L
                       </span>
                       <input
                         type="text"
-                        className="rounded-none rounded-r-lg bg-gray-50 border border-gray-300 text-gray-900 flex-1 min-w-0 w-full text-sm p-2.5 "
+                        className="rounded-none rounded-r-lg bg-gray-50 border font-KoHo border-gray-300 text-black flex-1 min-w-0 w-full text-base p-2.5 "
                         name="characterSkinUrlPage"
                         placeholder="dofus page perso link"
-                        value={fetchedUserData.characterSkinUrlPage}
+                        ref={characterUrlRef}
                         onChange={handleChange}
                       />
-                      <BiRefresh
+                      <button
+                        className="flex justify-center items-center"
                         onClick={handleCharacterLink}
-                        className="text-3xl self-center ml-2 cursor-pointer"
-                      />
+                        disabled={isLoadingCharacterLink}
+                      >
+                        <BiRefresh
+                          style={{
+                            color: isLoadingCharacterLink ? "red" : "#ffffff",
+                          }}
+                          className={`${
+                            isLoadingCharacterLink
+                              ? "text-3xl self-center text-red-500 animate-spin"
+                              : "text-3xl self-center text-white"
+                          }`}
+                        />
+                      </button>
                     </div>
                   </div>
                   <div>
                     <label
-                      className="mb-2 text-sm font-medium text-white"
+                      className="mb-2 text-lg italic font-KoHo font-medium text-white"
                       htmlFor="user_avatar"
                     >
                       Upload file
                     </label>
                     <input
-                      className=" w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50  focus:outline-none"
+                      className=" w-full text-base text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50  focus:outline-none"
                       name="user_avatar"
                       type="file"
                       ref={imageRef}
                     />
                   </div>
+
+                  <div className="flex flex-col">
+                    <label
+                      htmlFor="message"
+                      className="mb-2 text-lg italic font-KoHo font-medium text-white"
+                    >
+                      Description
+                    </label>
+                    <textarea
+                      id="message"
+                      rows={Number(4)}
+                      className=" p-3 w-full font-KoHo text-lg text-black rounded-lg border border-gray-300"
+                      placeholder="Description, 150max ..."
+                      name="description"
+                      value={fetchedUserData.description}
+                      onChange={handleChange}
+                      maxLength={150}
+                    />
+                  </div>
                   <button
                     type="submit"
-                    className="bg-white text-black p-2 rounded-lg mt-4"
+                    disabled={isLoadingSubmit}
+                    className={`${
+                      isLoadingSubmit
+                        ? "bg-red-500 font-KoHo text-white p-2 rounded-lg mt-4"
+                        : "bg-white font-KoHo text-black p-2 rounded-lg mt-4"
+                    }`}
                   >
                     Submit
                   </button>
                 </form>
+              </div>
+              <div className="w-1 h-full bg-white opacity-5 mr-8"></div>
+              <div className=" flex justify-center items-center">
+                <img
+                  src={`https://goultarena-aws3.s3.eu-west-3.amazonaws.com/${fetchedUserData.keyProfileImg}`}
+                  className="w-44 h-44 rounded shadow-[0_4px_4px_-0px_rgba(0,0,0,0.25)]"
+                />
               </div>
             </div>
             <FooterLayout />
