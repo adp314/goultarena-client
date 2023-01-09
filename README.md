@@ -13,6 +13,7 @@ CLIENT (FRONT) SIDE TECHS :
 
 libs:
 
-- Font Awesome
+- Axios
+- Auth0
+- React Icons
 - TailwindCSS
-- React Query
