@@ -144,7 +144,7 @@ export function UserEdit() {
     try {
       const token = await getAccessTokenSilently();
       // const infosToSendForAPI = { ...fetchedUserData };
-
+      // testing
       const putResponse = await api
         .authorized(token)
         .put("/user/edit", infosToSendForAPI);
