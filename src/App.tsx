@@ -5,9 +5,9 @@ import "./App.css";
 import "./i18n";
 import { Home } from "./pages/Home/index";
 import { UserTest } from "./pages/UserTest/index";
-import { NotAllowedView } from "./components/NotAllowedView";
 import { UserSignIn } from "./pages/UserSignIn";
 import { UserEdit } from "./pages/UserEdit";
+import { NotAllowedViewPage } from "./pages/NotAllowedViewPage";
 import Auth0ProviderWithNavigate from "./auth/Auth0-provider-with-navigate";
 // import { ProtectedRoute } from "./components/ProtectedRoute";
 
@@ -27,14 +27,16 @@ function App() {
               <Route path="/usertest" element={<UserTest />} />
             </Routes>
           </BrowserView>
-          {/* ////// */}
           <MobileView>
-            <NotAllowedView />
+            <Routes>
+              <Route path="/notallowedview" element={<NotAllowedViewPage />} />
+            </Routes>
           </MobileView>
           <TabletView>
-            <NotAllowedView />
+            <Routes>
+              <Route path="/notallowedview" element={<NotAllowedViewPage />} />
+            </Routes>
           </TabletView>
-          {/* ////// */}
         </Auth0ProviderWithNavigate>
       </Suspense>
     </>

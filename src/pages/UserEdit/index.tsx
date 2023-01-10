@@ -1,7 +1,7 @@
 import { GlobalLayout } from "../../components/LayoutGlobal/index";
 import { useAuth0 } from "@auth0/auth0-react";
 import { FooterLayout } from "../../components/FooterLayout";
-import { useEffect, useState, useRef, FormEvent, ChangeEvent } from "react";
+import { useEffect, useState, useRef, FormEvent } from "react";
 import { BiRefresh } from "react-icons/Bi";
 import api from "../../lib/api";
 import axios from "axios";
@@ -37,16 +37,11 @@ export function UserEdit() {
       const token = await getAccessTokenSilently();
       if (user && isAuthenticated === true && isLoading === false) {
         try {
-          if (user?.email) {
-            const fetchUserResponse = await axios.get(
-              `http://localhost:4000/api/user/fetch?email=${user?.email}`,
-              {
-                headers: {
-                  Authorization: `Bearer ${token}`,
-                },
-              }
-            );
-            setFetchedUserData(fetchUserResponse.data);
+          if (user.email) {
+            const res = await api
+              .authorized(token)
+              .get(`/user/fetch?email=${user.email}`);
+            setFetchedUserData(res.data);
           }
         } catch (err) {
           console.log(err);
@@ -54,7 +49,7 @@ export function UserEdit() {
       }
     }
     fetchUserData();
-  }, [user, isAuthenticated === true]);
+  }, [user && isAuthenticated === true]);
 
   // function handleChange for the form
 
@@ -143,13 +138,12 @@ export function UserEdit() {
 
     try {
       const token = await getAccessTokenSilently();
-      // const infosToSendForAPI = { ...fetchedUserData };
-      // testing
       const putResponse = await api
         .authorized(token)
         .put("/user/edit", infosToSendForAPI);
       console.log(putResponse.data);
       setIsLoadingSubmit(false);
+      window.location.reload();
     } catch (err) {
       console.log(err);
     }
@@ -160,7 +154,7 @@ export function UserEdit() {
       pageContainer={
         <div className="w-full h-full flex justify-center">
           <div className="flex flex-col w-5/6 h-full border-r-2 border-l-2 border-[#111111] box-border">
-            <div className="bg-no-repeat bg-top bg-[url('/src/images/banner.jpg')] w-full h-2/6 ma bg-cover drop-shadow-md sticky top-0" />
+            <div className="bg-no-repeat bg-[url('/src/images/banner.jpg')] w-full h-[22%] bg-cover drop-shadow-md" />
             <div className="bg-[#181818] text-white font-KoHo flex justify-evenly h-full">
               <div className="flex justify-center items-center ">
                 <img
@@ -171,7 +165,7 @@ export function UserEdit() {
                   }
                 />
               </div>
-              <div className="w-1 h-full bg-white opacity-5"></div>
+              <div className="w-0.5 h-full bg-gray-400 opacity-5"></div>
               <div className=" flex justify-center items-center mt-8 mb-10">
                 <form
                   onSubmit={handleSubmit}
@@ -194,7 +188,9 @@ export function UserEdit() {
                         name="userName"
                         value={fetchedUserData.userName}
                         onChange={handleChange}
-                        maxLength={15}
+                        pattern="[a-zA-Z][a-zA-Z0-9_-]{2,12}#[0-9]{3}"
+                        minLength={7}
+                        maxLength={16}
                       />
                     </div>
                   </div>
@@ -206,12 +202,12 @@ export function UserEdit() {
                       Perso page link
                     </label>
                     <div className="flex ">
-                      <span className="flex items-center px-3 text-base text-black bg-gray-200 border border-r-0 border-gray-300 rounded-l-md">
+                      <span className="flex items-center px-3 text-base text-black bg-gray-300 border border-r-0 border-gray-300 rounded-l-md">
                         L
                       </span>
                       <input
                         type="text"
-                        className="rounded-none rounded-r-lg bg-gray-50 border font-KoHo border-gray-300 text-black flex-1 min-w-0 w-full text-base p-2.5 "
+                        className="rounded-none rounded-r-lg bg-white border font-KoHo border-gray-300 text-black flex-1 min-w-0 w-full text-base p-2.5 "
                         name="characterSkinUrlPage"
                         placeholder="dofus page perso link"
                         ref={characterUrlRef}
@@ -228,8 +224,8 @@ export function UserEdit() {
                           }}
                           className={`${
                             isLoadingCharacterLink
-                              ? "text-3xl self-center text-red-500 animate-spin"
-                              : "text-3xl self-center text-white"
+                              ? "ml-10 absolute text-3xl self-center text-red-500 animate-spin"
+                              : "ml-10 absolute text-3xl self-center text-white"
                           }`}
                         />
                       </button>
@@ -243,7 +239,7 @@ export function UserEdit() {
                       Upload file
                     </label>
                     <input
-                      className=" w-full text-base text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50  focus:outline-none"
+                      className=" w-full h-10 text-base text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-white"
                       name="user_avatar"
                       type="file"
                       ref={imageRef}
@@ -273,7 +269,7 @@ export function UserEdit() {
                     disabled={isLoadingSubmit}
                     className={`${
                       isLoadingSubmit
-                        ? "bg-red-500 font-KoHo text-white p-2 rounded-lg mt-4"
+                        ? "hidden"
                         : "bg-white font-KoHo text-black p-2 rounded-lg mt-4"
                     }`}
                   >
@@ -281,11 +277,13 @@ export function UserEdit() {
                   </button>
                 </form>
               </div>
-              <div className="w-1 h-full bg-white opacity-5 mr-8"></div>
+              <div className="w-0.5 h-full bg-gray-400 opacity-5 mr-8"></div>
               <div className=" flex justify-center items-center">
-                <img
-                  src={`https://goultarena-aws3.s3.eu-west-3.amazonaws.com/${fetchedUserData.keyProfileImg}`}
-                  className="w-44 h-44 rounded shadow-[0_4px_4px_-0px_rgba(0,0,0,0.25)]"
+                <div
+                  className={`w-48 h-48 rounded bg-no-repeat bg-cover shadow-[0_4px_4px_-0px_rgba(0,0,0,0.25)]`}
+                  style={{
+                    backgroundImage: `url(https://goultarena-aws3.s3.eu-west-3.amazonaws.com/${fetchedUserData.keyProfileImg})`,
+                  }}
                 />
               </div>
             </div>

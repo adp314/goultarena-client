@@ -3,7 +3,7 @@ import "../../i18n";
 import { ImHome } from "react-icons/im";
 import { FiCornerDownRight } from "react-icons/fi";
 import { RiTableAltFill } from "react-icons/ri";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { FaAddressBook } from "react-icons/fa";
 import { MdHelp } from "react-icons/Md";
 import { GiPodium, GiArena } from "react-icons/Gi";
@@ -16,6 +16,10 @@ import { NavUserSection } from "../NavUserSection";
 export function NavLayout() {
   const { t, i18n } = useTranslation();
 
+  const location = useLocation();
+
+  const isHome = location.pathname === "/home";
+
   function handleClickFR() {
     i18n.changeLanguage("fr");
   }
@@ -25,12 +29,16 @@ export function NavLayout() {
   }
 
   return (
-    <aside className=" bg-[#181818] w-64 h-screen box-border flex flex-col items-center justify-start">
-      <div className="w-full h-44 flex items-center justify-center ml-6 mt-2">
-        <img className="w-28" src={goultarenalogo} alt="goultarena_logo" />
+    <aside className=" bg-[#181818] w-[13.33%] h-full sticky left-0 box-border flex flex-col items-center justify-start">
+      <div className="w-full h-[20%] box-border flex items-center justify-center pl-3.5">
+        <img
+          className="w-28 box-border"
+          src={goultarenalogo}
+          alt="goultarena_logo"
+        />
       </div>
 
-      <div className="w-full h-0.5 bg-white mt-2 opacity-10"></div>
+      <div className="w-full h-0.5 bg-white opacity-10"></div>
       <div className="flex justify-between box-border my-5 gap-5 cursor-pointer">
         <img
           className="w-8 h-auto rounded-md"
@@ -55,8 +63,14 @@ export function NavLayout() {
 
       <div className="flex flex-col h-full w-full justify-between ">
         <nav className="flex flex-col box-border w-full mt-14 gap-5 px-6 cursor-pointer">
-          <div className="flex font-KoHo text-white uppercase text-lg items-center gap-2">
-            <ImHome className="text-2xl" />
+          <div
+            className={
+              isHome
+                ? "flex font-KoHo bg-yellow-800 bg-opacity-70 rounded pl-1 pr-1 w-max text-white uppercase text-lg items-center gap-2"
+                : "flex font-KoHo bg-yellow-800 bg-opacity-0 rounded pl-1 pr-1 w-max text-white uppercase text-lg items-center gap-2"
+            }
+          >
+            <ImHome className="text-xl" />
             <Link to="/home">
               <p>{t("nav_home")}</p>
             </Link>
@@ -64,46 +78,48 @@ export function NavLayout() {
 
           <div className="flex flex-col w-full">
             <div className="flex font-KoHo text-white uppercase text-lg items-center gap-2">
-              <RiTableAltFill className="text-2xl" />
+              <RiTableAltFill className="text-xl" />
               <p>{t("nav_ladders")}</p>
             </div>
             <div className="text-sm flex text-white items-center  uppercase font-KoHo gap-1 mt-1">
-              <FiCornerDownRight />
-              <p>{t("nav_ladders3vs3")}</p>
+              <FiCornerDownRight className="text-xs" />
+              <p className="text-sm">{t("nav_ladders3vs3")}</p>
             </div>
             <div className="text-sm flex text-white items-center  uppercase font-KoHo gap-1">
-              <FiCornerDownRight />
-              <p>{t("nav_ladders2vs2")}</p>
+              <FiCornerDownRight className="text-xs" />
+              <p className="text-sm">{t("nav_ladders2vs2")}</p>
             </div>
             <div className="text-sm flex text-white items-center  uppercase font-KoHo gap-1">
-              <FiCornerDownRight />
-              <p>{t("nav_ladders1vs1")}</p>
+              <FiCornerDownRight className="text-xs" />
+              <p className="text-sm">{t("nav_ladders1vs1")}</p>
             </div>
           </div>
 
           <div className="flex flex-col">
             <div className="flex font-KoHo text-white uppercase text-lg items-center gap-2">
-              <FaAddressBook className="text-2xl" />{" "}
+              <FaAddressBook className="text-xl" />{" "}
               <p>{t("nav_directorybook")}</p>
             </div>
             <div className="text-sm flex text-white items-center uppercase font-KoHo gap-1 mt-1">
-              <FiCornerDownRight /> <p>{t("nav_directoryplayers")}</p>
+              <FiCornerDownRight className="text-xs" />{" "}
+              <p className="text-sm">{t("nav_directoryplayers")}</p>
             </div>
             <div className="text-sm flex text-white items-center uppercase font-KoHo gap-1">
-              <FiCornerDownRight /> <p>{t("nav_directoryteams")}</p>
+              <FiCornerDownRight className="text-xs" />{" "}
+              <p className="text-sm">{t("nav_directoryteams")}</p>
             </div>
           </div>
 
           <div className="flex font-KoHo text-white uppercase text-lg items-center gap-2">
-            <GiArena className="text-2xl" /> <p>{t("nav_arena")}</p>
+            <GiArena className="text-xl" /> <p>{t("nav_arena")}</p>
           </div>
 
           <div className="flex font-KoHo text-white uppercase text-lg items-center gap-2">
-            <GiPodium className="text-2xl" /> <p>{t("nav_ranking")}</p>
+            <GiPodium className="text-xl" /> <p>{t("nav_ranking")}</p>
           </div>
 
           <div className="flex font-KoHo text-white uppercase text-lg items-center gap-2">
-            <MdHelp className="text-2xl" /> <p>{t("nav_help")}</p>
+            <MdHelp className="text-xl" /> <p>{t("nav_help")}</p>
           </div>
         </nav>
         <NavUserSection />

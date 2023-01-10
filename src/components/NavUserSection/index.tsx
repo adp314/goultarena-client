@@ -2,10 +2,11 @@ import { NavUserToLog } from "../NavUserToLog";
 import { NavUserLogged } from "../NavUserLogged";
 import { useAuth0 } from "@auth0/auth0-react";
 import { useState, useEffect } from "react";
-import axios from "axios";
+import api from "../../lib/api";
 
 export function NavUserSection() {
-  const { user, isAuthenticated, getAccessTokenSilently } = useAuth0();
+  const { user, isAuthenticated, isLoading, getAccessTokenSilently } =
+    useAuth0();
   const [isUpdated, setIsUpdated] = useState<boolean>(false);
   const [UserDataFromAuth0ToPut, setUserDataFromAuth0ToPut] = useState({
     email: "",
@@ -14,15 +15,10 @@ export function NavUserSection() {
     auth0lastConnexion: "",
   });
 
-  const [fetchedUserData, setFetchedUserData] = useState({
-    userName: "",
-    email: "",
-  });
-
   // set the subIdAuth on localstorage and set the auth0 infos on a state (UserDataFromAuth0ToPut)
 
   useEffect(() => {
-    if (user && isAuthenticated === true) {
+    if (user && isAuthenticated === true && isLoading == false) {
       localStorage.setItem("subIdAuth", user?.sub as string);
 
       setUserDataFromAuth0ToPut({
@@ -34,7 +30,7 @@ export function NavUserSection() {
     }
     if (user && isAuthenticated === true) {
       setIsUpdated(true);
-    } else if (user && isAuthenticated === false) {
+    } else if (!user && isAuthenticated === false) {
       setIsUpdated(false);
     }
   }, [user]);
@@ -43,39 +39,24 @@ export function NavUserSection() {
 
   useEffect(() => {
     async function SignupOrUpdate() {
-      const token = await getAccessTokenSilently();
-      try {
-        if (isUpdated) {
-          const response = await axios.put(
-            "http://localhost:4000/api/user/updateorsignup",
-            UserDataFromAuth0ToPut,
-            {
-              headers: {
-                Authorization: `Bearer ${token}`,
-              },
-            }
-          );
-          setFetchedUserData(response.data);
+      if (isUpdated === true) {
+        try {
+          const token = await getAccessTokenSilently();
+
+          const response = await api
+            .authorized(token)
+            .put("/user/updateorsignup", UserDataFromAuth0ToPut);
+        } catch (err) {
+          console.log(err);
         }
-      } catch (error) {
-        console.log(error);
       }
     }
     SignupOrUpdate();
-  }, [user, isUpdated === true]);
-
-  console.log(fetchedUserData.userName);
+  }, [user && isUpdated === true]);
 
   return (
-    <div className=" w-full h-28 flex flex-col">
-      <div className="bg-amber-900 w-full h-10 flex font-KoHo items-center text-white text-base">
-        <p className="ml-2">[TAG] {fetchedUserData.userName}</p>
-      </div>
-      <div className="bg-amber-800 w-full h-full flex items-center justify-center">
-        <div className="flex">
-          {isAuthenticated ? <NavUserLogged /> : <NavUserToLog />}
-        </div>
-      </div>
+    <div className=" w-full h-[19%] flex flex-col">
+      {isAuthenticated ? <NavUserLogged /> : <NavUserToLog />}
     </div>
   );
 }
