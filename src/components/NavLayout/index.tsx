@@ -66,8 +66,8 @@ export function NavLayout() {
           <div
             className={
               isHome
-                ? "flex font-KoHo bg-yellow-800 bg-opacity-70 rounded pl-1 pr-1 w-max text-white uppercase text-lg items-center gap-2"
-                : "flex font-KoHo bg-yellow-800 bg-opacity-0 rounded pl-1 pr-1 w-max text-white uppercase text-lg items-center gap-2"
+                ? "flex font-KoHo text-yellow-600 uppercase text-lg items-center gap-2"
+                : "flex font-KoHo text-white uppercase text-lg items-center gap-2"
             }
           >
             <ImHome className="text-xl" />

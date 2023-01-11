@@ -1,12 +1,16 @@
 import { useAuth0 } from "@auth0/auth0-react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
 import api from "../../lib/api";
 import { AiOutlineMenu, AiFillTrophy } from "react-icons/Ai";
 import { GiUpgrade } from "react-icons/Gi";
-import { BsPersonFill } from "react-icons/Bs";
-import { RiSettings3Fill, RiTeamFill } from "react-icons/ri";
-import { FaPowerOff } from "react-icons/fa";
+import {
+  RiSettingsFill,
+  RiTeamFill,
+  RiUserFill,
+  RiLogoutCircleRFill,
+} from "react-icons/ri";
+
 import { RxCross2 } from "react-icons/Rx";
 
 export function NavUserLogged() {
@@ -14,6 +18,8 @@ export function NavUserLogged() {
     useAuth0();
 
   const [isMenuVisible, setIsMenuVisible] = useState(false);
+
+  const isUserView = location.pathname === "/user/view";
 
   const [fetchedUserData, setFetchedUserData] = useState({
     userName: "",
@@ -47,21 +53,26 @@ export function NavUserLogged() {
 
   return (
     <>
-      <div className="w-full h-0.5 bg-white opacity-75"></div>
+      <div className="w-full h-0.5 bg-white opacity-60"></div>
 
       <div className="w-full flex font-KoHo justify-between items-center text-white text-base uppercase ">
         {isMenuVisible ? (
           <div className="h-full w-max flex justify-start items-center">
-            <div className="flex justify-start items-center gap-6 ml-3.5 mt-2.5 mb-2.5">
+            <div className="flex justify-start items-center h-full gap-3.5 ml-3 mt-2.5 mb-2.5">
               <Link to="/user/edit">
-                <BsPersonFill className="text-xl" />
+                <RiUserFill className="text-lg hover:text-yellow-600" />
               </Link>
+              <div className="w-0.5 rounded h-1/2 bg-white opacity-30"></div>
               <Link to="/user/edit">
-                <RiSettings3Fill className="text-xl" />
+                <RiTeamFill className="text-lg hover:text-yellow-600" />
               </Link>
-              <RiTeamFill className="text-xl" />
-              <FaPowerOff
-                className="text-xl cursor-pointer"
+              <div className="w-0.5 rounded h-1/2 bg-white opacity-30"></div>
+              <Link to="/user/edit">
+                <RiSettingsFill className="text-lg hover:text-yellow-600" />
+              </Link>
+              <div className="w-0.5 rounded h-1/2 bg-white opacity-30"></div>
+              <RiLogoutCircleRFill
+                className="text-xl cursor-pointer hover:text-yellow-600"
                 onClick={() => {
                   localStorage.clear();
                   logout({
@@ -73,13 +84,21 @@ export function NavUserLogged() {
           </div>
         ) : (
           <>
-            <p className="ml-1 mt-2 mb-2 text-base">
-              {fetchedUserData?.team?.teamTag ? (
-                <span>[{fetchedUserData?.team?.teamTag}]</span>
-              ) : (
-                <span className="ml-1"></span>
-              )}{" "}
-              {fetchedUserData?.userName}
+            <p
+              className={
+                isUserView
+                  ? "ml-1 mt-2 mb-2 text-base text-yellow-600"
+                  : "ml-1 mt-2 mb-2 text-base"
+              }
+            >
+              <Link to="/user/view">
+                {fetchedUserData?.team?.teamTag ? (
+                  <span>[{fetchedUserData?.team?.teamTag}]</span>
+                ) : (
+                  <span className="ml-1"></span>
+                )}{" "}
+                {fetchedUserData?.userName}
+              </Link>
             </p>
           </>
         )}
@@ -94,12 +113,12 @@ export function NavUserLogged() {
           )}
         </div>
       </div>
-      <div className="w-full h-0.5 bg-white opacity-75"></div>
+      <div className="w-full h-0.5 bg-white opacity-60"></div>
       {/* /////// */}
       <div className="flex h-full w-full">
         <div className="flex justify-center items-center w-[40%]">
           <div
-            className={`w-14 h-14 rounded border-2 bg-no-repeat bg-cover shadow-[0_4px_4px_-0px_rgba(0,0,0,0.25)]`}
+            className={`w-14 h-14 rounded border-2 border-gray-600 bg-no-repeat bg-cover shadow-[0_4px_4px_-0px_rgba(0,0,0,0.25)]`}
             style={{
               backgroundImage: `url(https://goultarena-aws3.s3.eu-west-3.amazonaws.com/${fetchedUserData?.keyProfileImg})`,
             }}
@@ -108,11 +127,10 @@ export function NavUserLogged() {
         <div className=" h-full w-[60%] text-white flex justify-start items-center">
           <div className="flex flex-wrap items-center justify-start gap-1.5">
             <div className="flex justify-start items-center gap-2">
-              <GiUpgrade className="text-xl" />{" "}
-              <p className="uppercase">unranked</p>
+              <GiUpgrade className="text-xl" /> <p>Unranked</p>
             </div>
             <div className="flex items-center gap-2">
-              <AiFillTrophy className="text-xl" /> <p>1000 pts</p>
+              <AiFillTrophy className="text-xl" /> <p>0 pts</p>
             </div>
           </div>
         </div>

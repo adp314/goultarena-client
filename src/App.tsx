@@ -4,9 +4,9 @@ import { BrowserView, MobileView, TabletView } from "react-device-detect";
 import "./App.css";
 import "./i18n";
 import { Home } from "./pages/Home/index";
-import { UserTest } from "./pages/UserTest/index";
-import { UserSignIn } from "./pages/UserSignIn";
+
 import { UserEdit } from "./pages/UserEdit";
+import { UserView } from "./pages/UserView";
 import { NotAllowedViewPage } from "./pages/NotAllowedViewPage";
 import Auth0ProviderWithNavigate from "./auth/Auth0-provider-with-navigate";
 // import { ProtectedRoute } from "./components/ProtectedRoute";
@@ -22,9 +22,8 @@ function App() {
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/home" element={<Home />} />
-              <Route path="/signin" element={<UserSignIn />} />
               <Route path="/user/edit" element={<UserEdit />} />
-              <Route path="/usertest" element={<UserTest />} />
+              <Route path="/user/view" element={<UserView />} />
             </Routes>
           </BrowserView>
           <MobileView>
