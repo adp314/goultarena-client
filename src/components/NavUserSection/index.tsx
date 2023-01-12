@@ -56,7 +56,11 @@ export function NavUserSection() {
 
   return (
     <div className=" w-full h-[19%] flex flex-col">
-      {isAuthenticated ? <NavUserLogged /> : <NavUserToLog />}
+      {isAuthenticated && isUpdated === true ? (
+        <NavUserLogged />
+      ) : (
+        <NavUserToLog />
+      )}
     </div>
   );
 }

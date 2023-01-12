@@ -13,10 +13,10 @@ i18next
     debug: false,
 
     detection: {
-      order: ["path", "localStorage", "htmlTag"],
+      order: ["localStorage", "path", "htmlTag"],
       caches: ["localStorage"],
     },
     backend: {
-      loadPath: "../src/locales/{{lng}}/{{ns}}.json",
+      loadPath: `/src/locales/{{lng}}/{{ns}}.json`,
     },
   });

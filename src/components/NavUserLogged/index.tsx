@@ -1,5 +1,5 @@
 import { useAuth0 } from "@auth0/auth0-react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
 import api from "../../lib/api";
 import { AiOutlineMenu, AiFillTrophy } from "react-icons/Ai";
@@ -17,11 +17,13 @@ export function NavUserLogged() {
   const { isAuthenticated, user, isLoading, getAccessTokenSilently, logout } =
     useAuth0();
 
+  let { userId } = useParams();
   const [isMenuVisible, setIsMenuVisible] = useState(false);
 
-  const isUserView = location.pathname === "/user/view";
+  const isUserView = location.pathname === `/user/view/${userId}`;
 
   const [fetchedUserData, setFetchedUserData] = useState({
+    _id: "",
     userName: "",
     sub: "",
     email: "",
@@ -36,10 +38,10 @@ export function NavUserLogged() {
       const token = await getAccessTokenSilently();
       if (user && isAuthenticated === true && isLoading === false) {
         try {
-          if (user.email) {
+          if (user.sub) {
             const res = await api
               .authorized(token)
-              .get(`/user/fetch?email=${user.email}`);
+              .get(`/user/fetch?sub=${user.sub}`);
             setFetchedUserData(res.data);
             console.log(fetchedUserData);
           }
@@ -58,7 +60,7 @@ export function NavUserLogged() {
       <div className="w-full flex font-KoHo justify-between items-center text-white text-base uppercase ">
         {isMenuVisible ? (
           <div className="h-full w-max flex justify-start items-center">
-            <div className="flex justify-start items-center h-full gap-3.5 ml-3 mt-2.5 mb-2.5">
+            <div className="flex justify-start items-center h-full gap-2.5 ml-3 mt-2.5 mb-2.5">
               <Link to="/user/edit">
                 <RiUserFill className="text-lg hover:text-yellow-600" />
               </Link>
@@ -91,7 +93,7 @@ export function NavUserLogged() {
                   : "ml-1 mt-2 mb-2 text-base"
               }
             >
-              <Link to="/user/view">
+              <Link to={`/user/view/${fetchedUserData._id}`}>
                 {fetchedUserData?.team?.teamTag ? (
                   <span>[{fetchedUserData?.team?.teamTag}]</span>
                 ) : (
@@ -117,12 +119,14 @@ export function NavUserLogged() {
       {/* /////// */}
       <div className="flex h-full w-full">
         <div className="flex justify-center items-center w-[40%]">
-          <div
-            className={`w-14 h-14 rounded border-2 border-gray-600 bg-no-repeat bg-cover shadow-[0_4px_4px_-0px_rgba(0,0,0,0.25)]`}
-            style={{
-              backgroundImage: `url(https://goultarena-aws3.s3.eu-west-3.amazonaws.com/${fetchedUserData?.keyProfileImg})`,
-            }}
-          />
+          <Link to={`/user/view/${fetchedUserData._id}`}>
+            <div
+              className={`w-14 h-14 rounded border-2 border-gray-600 bg-no-repeat bg-cover shadow-[0_4px_4px_-0px_rgba(0,0,0,0.25)]`}
+              style={{
+                backgroundImage: `url(https://goultarena-aws3.s3.eu-west-3.amazonaws.com/${fetchedUserData?.keyProfileImg})`,
+              }}
+            />
+          </Link>
         </div>
         <div className=" h-full w-[60%] text-white flex justify-start items-center">
           <div className="flex flex-wrap items-center justify-start gap-1.5">
