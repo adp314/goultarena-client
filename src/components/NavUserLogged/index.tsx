@@ -93,14 +93,12 @@ export function NavUserLogged() {
                   : "ml-1 mt-2 mb-2 text-base"
               }
             >
-              <Link to={`/user/view/${fetchedUserData._id}`}>
-                {fetchedUserData?.team?.teamTag ? (
-                  <span>[{fetchedUserData?.team?.teamTag}]</span>
-                ) : (
-                  <span className="ml-1"></span>
-                )}{" "}
-                {fetchedUserData?.userName}
-              </Link>
+              {fetchedUserData?.team?.teamTag ? (
+                <span>[{fetchedUserData?.team?.teamTag}]</span>
+              ) : (
+                <span className="ml-1"></span>
+              )}{" "}
+              {fetchedUserData?.userName}
             </p>
           </>
         )}
@@ -119,14 +117,16 @@ export function NavUserLogged() {
       {/* /////// */}
       <div className="flex h-full w-full">
         <div className="flex justify-center items-center w-[40%]">
-          <Link to={`/user/view/${fetchedUserData._id}`}>
-            <div
-              className={`w-14 h-14 rounded border-2 border-gray-600 bg-no-repeat bg-cover shadow-[0_4px_4px_-0px_rgba(0,0,0,0.25)]`}
-              style={{
-                backgroundImage: `url(https://goultarena-aws3.s3.eu-west-3.amazonaws.com/${fetchedUserData?.keyProfileImg})`,
-              }}
-            />
-          </Link>
+          {fetchedUserData && fetchedUserData._id && (
+            <Link to={`/user/view/${fetchedUserData._id}`}>
+              <div
+                className={`w-14 h-14 rounded border-2 border-gray-600 bg-no-repeat bg-cover shadow-[0_4px_4px_-0px_rgba(0,0,0,0.25)]`}
+                style={{
+                  backgroundImage: `url(https://goultarena-aws3.s3.eu-west-3.amazonaws.com/${fetchedUserData?.keyProfileImg})`,
+                }}
+              />
+            </Link>
+          )}
         </div>
         <div className=" h-full w-[60%] text-white flex justify-start items-center">
           <div className="flex flex-wrap items-center justify-start gap-1.5">

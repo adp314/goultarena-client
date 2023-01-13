@@ -7,6 +7,7 @@ import { GiUpgrade } from "react-icons/Gi";
 import { FaTwitter } from "react-icons/fa";
 import { BsDiscord } from "react-icons/Bs";
 import { AiFillTrophy } from "react-icons/Ai";
+import { IoMdStats } from "react-icons/Io";
 import axios from "axios";
 
 export function UserView() {
@@ -64,19 +65,27 @@ export function UserView() {
                     </h1>
                     <div className="flex justify-between items-center mt-2">
                       <div className="flex items-center gap-1.5">
-                        <BsDiscord className="text-indigo-700 text-lg mt-0.5" />
-                        <p className="uppercase">
-                          {" "}
-                          {fetchedUserData.socialNetworkDiscord}
-                        </p>
+                        {fetchedUserData.socialNetworkDiscord && (
+                          <>
+                            <BsDiscord className="text-indigo-700 text-lg mt-0.5" />
+                            <p className="uppercase">
+                              {" "}
+                              {fetchedUserData.socialNetworkDiscord}
+                            </p>
+                          </>
+                        )}
                       </div>
 
                       <div className="flex items-center gap-1.5">
-                        <FaTwitter className="text-blue-500 text-lg mt-0.5" />
-                        <p className="uppercase">
-                          {" "}
-                          {fetchedUserData.socialNetworkTwitter}
-                        </p>
+                        {fetchedUserData.socialNetworkDiscord && (
+                          <>
+                            <FaTwitter className="text-blue-500 text-lg mt-0.5" />
+                            <p className="uppercase">
+                              {" "}
+                              {fetchedUserData.socialNetworkTwitter}
+                            </p>
+                          </>
+                        )}
                       </div>
                     </div>
                   </div>

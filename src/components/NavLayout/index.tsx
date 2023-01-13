@@ -21,7 +21,7 @@ export function NavLayout() {
   const isHome = location.pathname === "/home";
   const isDirectory = location.pathname === "/directory";
   const isLadders = location.pathname === "/ladders";
-  const isArena = location.pathname === "/arena";
+  // const isArena = location.pathname === "/arena";
   const isRanking = location.pathname === "/ranking";
   const isHelp = location.pathname === "/help";
 

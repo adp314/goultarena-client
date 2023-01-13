@@ -7,38 +7,25 @@ import { FaTwitter } from "react-icons/fa";
 import { BsDiscord } from "react-icons/Bs";
 import { AiFillTrophy } from "react-icons/Ai";
 import axios from "axios";
+import { DirectoryPlayers } from "../../components/DirectoryPlayers";
 
 export function Ladders() {
   let { userId } = useParams();
 
   // const [goultarenaIsLoaded, setGoultarenaIsLoaded] = useState(false);
 
-  const [fetchedUserData, setFetchedUserData] = useState({
-    email: "",
-    userName: "",
-    sub: "",
-    keyProfileImg: "",
-    characterSkinUploaded: ["", ""],
-    description: "",
-    socialNetworkDiscord: "",
-    socialNetworkTwitter: "",
-    playerStats: { totalWins: 0, totalDraws: 0, totalLooses: 0 },
-    playerPoints: "",
-  });
-
-  useEffect(() => {
-    async function fetchUserData() {
-      try {
-        const res = await axios.get(
-          `http://localhost:4000/api/user/publicfetch?_id=${userId}`
-        );
-        setFetchedUserData(res.data);
-      } catch (err) {
-        console.log(err);
-      }
-    }
-    fetchUserData();
-  }, []);
+  // const [fetchedUserData, setFetchedUserData] = useState({
+  //   email: "",
+  //   userName: "",
+  //   sub: "",
+  //   keyProfileImg: "",
+  //   characterSkinUploaded: ["", ""],
+  //   description: "",
+  //   socialNetworkDiscord: "",
+  //   socialNetworkTwitter: "",
+  //   playerStats: { totalWins: 0, totalDraws: 0, totalLooses: 0 },
+  //   playerPoints: "",
+  // });
 
   return (
     <GlobalLayout
@@ -48,7 +35,9 @@ export function Ladders() {
             <div className="drop-shadow-md">
               <div className="bg-no-repeat bg-[url('/src/images/banner.jpg')] w-full h-32 bg-cover drop-shadow-md" />
             </div>
-            <section className="bg-[#181818] text-white font-KoHo flex flex-col h-full w-full drop-shadow-md"></section>
+            <section className="bg-[#181818] text-white font-KoHo flex flex-col h-full w-full drop-shadow-md">
+              <h1>ladders page</h1>
+            </section>
             <FooterLayout />
           </div>
         </div>
