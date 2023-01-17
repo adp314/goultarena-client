@@ -3,6 +3,7 @@ import { Routes, Route } from "react-router-dom";
 import { BrowserView, MobileView, TabletView } from "react-device-detect";
 import "./App.css";
 import "./i18n";
+import { LoadingMarkup } from "./components/LoadingMarkup";
 import { Home } from "./pages/Home/index";
 import { Ladders } from "./pages/Ladders/index";
 import { Directory } from "./pages/Directory/index";
@@ -11,11 +12,14 @@ import { Help } from "./pages/Help/index";
 import { ErrorPage } from "./pages/ErrorPage";
 import { UserEdit } from "./pages/UserEdit";
 import { UserView } from "./pages/UserView";
+import { TeamEdit } from "./pages/TeamEdit";
+import { TeamView } from "./pages/TeamView";
+import { TeamCreate } from "./pages/TeamCreate";
 import { NotAllowedViewPage } from "./pages/NotAllowedViewPage";
 import Auth0ProviderWithNavigate from "./auth/Auth0-provider-with-navigate";
 // import { ProtectedRoute } from "./components/ProtectedRoute";
 
-const loadingMarkup = <div>Loading translation ...</div>;
+const loadingMarkup = <LoadingMarkup />;
 
 function App() {
   return (
@@ -32,6 +36,9 @@ function App() {
               <Route path="/help" element={<Help />} />
               <Route path="/user/edit" element={<UserEdit />} />
               <Route path="/user/view/:userId" element={<UserView />} />
+              <Route path="/team/create" element={<TeamCreate />} />
+              <Route path="/team/edit" element={<TeamEdit />} />
+              <Route path="/team/view/:userId" element={<TeamView />} />
               <Route path="*" element={<ErrorPage />} />
             </Routes>
           </BrowserView>

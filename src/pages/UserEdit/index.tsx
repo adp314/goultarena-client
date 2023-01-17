@@ -109,7 +109,7 @@ export function UserEdit() {
         const file = target.files[0];
         if (file) {
           const response = await fetch(
-            `http://localhost:4000/api/uploadimg/postimg?sKey=` +
+            `http://localhost:4000/api/uploadimg/postuserimg?sKey=` +
               fetchedUserData.keyProfileImg,
             {
               method: "GET",

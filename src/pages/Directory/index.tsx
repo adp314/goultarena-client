@@ -28,20 +28,6 @@ export function Directory() {
     playerPoints: "",
   });
 
-  useEffect(() => {
-    async function fetchUserData() {
-      try {
-        const res = await axios.get(
-          `http://localhost:4000/api/user/publicfetch?_id=${userId}`
-        );
-        setFetchedUserData(res.data);
-      } catch (err) {
-        console.log(err);
-      }
-    }
-    fetchUserData();
-  }, []);
-
   console.log(directorySelect);
 
   return (
@@ -61,18 +47,28 @@ export function Directory() {
                       setDirectorySelect(true);
                     }}
                   >
-                    <FaAddressBook className="text-xl" />
-                    <h2 className="uppercase text-xl">players</h2>
+                    {directorySelect ? (
+                      <h2 className="uppercase text-2xl text-orange-400">
+                        players
+                      </h2>
+                    ) : (
+                      <h2 className="uppercase text-2xl">players</h2>
+                    )}
                   </div>
-                  <div className="h-4 w-1 bg-white" />
+                  <div className="h-5 w-1 bg-white" />
                   <div
                     className="flex justify-start items-center gap-1.5"
                     onClick={() => {
                       setDirectorySelect(false);
                     }}
                   >
-                    <FaAddressBook className="text-xl" />
-                    <h2 className="uppercase text-xl">teams</h2>
+                    {directorySelect ? (
+                      <h2 className="uppercase text-2xl">teams</h2>
+                    ) : (
+                      <h2 className="uppercase text-2xl text-orange-400">
+                        teams
+                      </h2>
+                    )}
                   </div>
                 </div>
                 <div className="flex justify-center items-center h-full w-full border-t border-white border-opacity-10 pt-10">

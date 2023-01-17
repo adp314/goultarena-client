@@ -34,7 +34,7 @@ export function NavLayout() {
   }
 
   return (
-    <aside className=" bg-[#181818] w-[12%] h-full sticky left-0 box-border flex flex-col items-center justify-start drop-shadow-md">
+    <aside className=" bg-[#181818] h-full w-max sticky left-0 box-border flex flex-col items-center justify-start drop-shadow-md">
       <div className="w-full h-[20%] box-border flex items-center justify-center pl-3.5">
         <img
           className="w-28 box-border"

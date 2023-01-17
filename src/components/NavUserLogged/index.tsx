@@ -27,7 +27,7 @@ export function NavUserLogged() {
     userName: "",
     sub: "",
     email: "",
-    team: { teamId: "", teamName: "", teamTag: "" },
+    team: { _teamId: "", teamName: "", teamTag: "" },
     rank: "",
     playerPoints: "",
     keyProfileImg: "",
@@ -65,9 +65,15 @@ export function NavUserLogged() {
                 <RiUserFill className="text-lg hover:text-yellow-600" />
               </Link>
               <div className="w-0.5 rounded h-1/2 bg-white opacity-30"></div>
-              <Link to="/user/edit">
-                <RiTeamFill className="text-lg hover:text-yellow-600" />
-              </Link>
+              {fetchedUserData.team._teamId !== "" ? (
+                <Link to="/team/edit">
+                  <RiTeamFill className="text-lg hover:text-yellow-600" />
+                </Link>
+              ) : (
+                <Link to="/team/create">
+                  <RiTeamFill className="text-lg hover:text-yellow-600" />
+                </Link>
+              )}
               <div className="w-0.5 rounded h-1/2 bg-white opacity-30"></div>
               <Link to="/user/edit">
                 <RiSettingsFill className="text-lg hover:text-yellow-600" />
