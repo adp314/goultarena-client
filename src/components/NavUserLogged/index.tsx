@@ -65,7 +65,7 @@ export function NavUserLogged() {
                 <RiUserFill className="text-lg hover:text-yellow-600" />
               </Link>
               <div className="w-0.5 rounded h-1/2 bg-white opacity-30"></div>
-              {fetchedUserData.team._teamId !== "" ? (
+              {fetchedUserData.team._teamId ? (
                 <Link to="/team/edit">
                   <RiTeamFill className="text-lg hover:text-yellow-600" />
                 </Link>

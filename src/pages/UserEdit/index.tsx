@@ -28,7 +28,7 @@ export function UserEdit() {
   const [isLoadingSubmit, setIsLoadingSubmit] = useState(false);
   const [isLoadingCharacterLink, setIsLoadingCharacterLink] = useState(false);
 
-  interface SkinImage {
+  interface SkinImage { // api nib
     src: string; // url from ankama website (protected)
     image: string; // base64 image
   }
@@ -109,7 +109,7 @@ export function UserEdit() {
         const file = target.files[0];
         if (file) {
           const response = await fetch(
-            `http://localhost:4000/api/uploadimg/postuserimg?sKey=` +
+            `http://localhost:4000/api/uploadimg/postimguser?sKey=` +
               fetchedUserData.keyProfileImg,
             {
               method: "GET",

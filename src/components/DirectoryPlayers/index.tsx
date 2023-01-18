@@ -25,7 +25,7 @@ export function DirectoryPlayers() {
       try {
         setDirectoryLoading(true);
         const res = await fetch(
-          `http://localhost:4000/api/directory/userfetch?page=${pageCount}`
+          `http://localhost:4000/api/directory/usersfetch?page=${pageCount}`
         );
         const data = await res.json();
         setFetchedAllPlayersDirectory(data);

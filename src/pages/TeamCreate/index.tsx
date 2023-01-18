@@ -13,7 +13,8 @@ export function TeamCreate() {
 
   const { user, isAuthenticated, isLoading, getAccessTokenSilently } =
     useAuth0();
-  // const [goultarenaIsLoaded, setGoultarenaIsLoaded] = useState(false);
+
+  const [isLoadingSubmit, setIsLoadingSubmit] = useState(false);
 
   const [fetchedUserData, setFetchedUserData] = useState({
     _id: "",
@@ -27,6 +28,7 @@ export function TeamCreate() {
     teamKeyImg: "",
     teamDescription: "",
     teamSecretCode: "",
+    teamLeaderId: "",
   });
 
   useEffect(() => {
@@ -56,43 +58,61 @@ export function TeamCreate() {
     });
   }
 
-  function handleSubmit(e: FormEvent) {
+  async function handleSubmit(e: FormEvent) {
     e.preventDefault();
+    let infosToSendForAPI = { ...createTeamInfosForm };
 
-    // try {
-    //   const target = imageRef?.current;
+    try {
+      const target = imageRef?.current;
 
-    //   if (target && target.files) {
-    //     const file = target.files[0];
-    //     if (file) {
-    //       const response = await fetch(
-    //         `http://localhost:4000/api/uploadimg/postimg?sKey=` +
-    //           fetchedUserData.keyProfileImg,
-    //         {
-    //           method: "GET",
-    //         }
-    //       );
+      if (target && target.files) {
+        const file = target.files[0];
+        if (file) {
+          const response = await fetch(
+            `http://localhost:4000/api/uploadimg/postimgteam?sKey=` +
+              createTeamInfosForm.teamKeyImg,
+            {
+              method: "GET",
+            }
+          );
 
-    //       const { post, key } = await response.json();
+          const { post, key } = await response.json();
 
-    //       const formData = new FormData();
-    //       Object.entries({
-    //         ...post.fields,
-    //         file,
-    //       }).forEach(([key, value]) => {
-    //         formData.append(key, value as string | Blob);
-    //       });
+          const formData = new FormData();
+          Object.entries({
+            ...post.fields,
+            file,
+          }).forEach(([key, value]) => {
+            formData.append(key, value as string | Blob);
+          });
 
-    //       await axios.post(post.url, formData);
+          await axios.post(post.url, formData);
 
-    //       setFetchedUserData({ ...fetchedUserData, keyProfileImg: key });
+          setCreateTeamInfosForm({ ...createTeamInfosForm, teamKeyImg: key });
 
-    //       infosToSendForAPI = { ...fetchedUserData, keyProfileImg: key };
-    //     }
-    //   }
-    // } catch (err) {
-    //   console.log(err);
-    // }
+          infosToSendForAPI = { ...createTeamInfosForm, teamKeyImg: key };
+        }
+      }
+    } catch (err) {
+      console.log(err);
+    }
+    try {
+      const token = await getAccessTokenSilently();
+
+      infosToSendForAPI = {
+        ...createTeamInfosForm,
+        teamLeaderId: fetchedUserData._id,
+      };
+      console.log(infosToSendForAPI);
+      const putResponse = await api
+        .authorized(token)
+        .post("/team/create", infosToSendForAPI);
+      console.log(putResponse.data);
+      setIsLoadingSubmit(false);
+      // window.location.reload();
+    } catch (err) {
+      console.log(err);
+    }
   }
 
   return (
@@ -105,15 +125,18 @@ export function TeamCreate() {
             </div>
             <section className="bg-[#181818] text-white font-KoHo flex flex-col h-full w-full drop-shadow-md">
               <div className="flex flex-col justify-center items-center">
-                {/* <div className=" flex justify-center items-center">
+                <div className=" flex justify-center items-center">
                   <div
                     className={`w-48 h-48 rounded bg-no-repeat bg-cover shadow-[0_4px_4px_-0px_rgba(0,0,0,0.25)]`}
                     style={{
-                      backgroundImage: `url(https://goultarena-aws3.s3.eu-west-3.amazonaws.com/${fetchedUserData.keyProfileImg})`,
+                      backgroundImage: `url(https://goultarena-aws3.s3.eu-west-3.amazonaws.com/${createTeamInfosForm.teamKeyImg})`,
                     }}
                   />
-                </div> */}
-                <form className="flex flex-col w-44" onSubmit={handleSubmit}>
+                </div>
+                <form
+                  className="flex flex-col w-44 font-KoHo"
+                  onSubmit={handleSubmit}
+                >
                   <label
                     className="mb-2 text-lg font-KoHo font-medium text-white"
                     htmlFor="team_avatar"
@@ -122,13 +145,14 @@ export function TeamCreate() {
                   </label>
                   <input
                     id="team_avatar"
-                    className="w-full h-10 text-base text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-white"
+                    className="w-full h-10 text-base text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-white "
                     name="user_avatar"
                     type="file"
                     ref={imageRef}
                   />
                   <label htmlFor="name">Team Name</label>
                   <input
+                    className="text-gray-900"
                     type="text"
                     id="name"
                     name="teamName"
@@ -137,6 +161,7 @@ export function TeamCreate() {
                   />
                   <label htmlFor="tag">Team Tag</label>
                   <input
+                    className="text-gray-900"
                     type="text"
                     id="tag"
                     name="teamTag"
@@ -145,6 +170,7 @@ export function TeamCreate() {
                   />
                   <label htmlFor="code">Secret Code</label>
                   <input
+                    className="text-gray-900"
                     type="text"
                     id="code"
                     name="teamSecretCode"
@@ -153,13 +179,17 @@ export function TeamCreate() {
                   />
                   <label htmlFor="description">Team Description</label>
                   <textarea
-                    name="description"
-                    id="teamDescription"
+                    className="text-gray-900"
+                    name="teamDescription"
+                    id="description"
                     rows={Number(4)}
                     onChange={handleChange}
                     value={createTeamInfosForm.teamDescription}
                   />
-                  <button type="submit" className="bg-green-500 text-white">
+                  <button
+                    type="submit"
+                    className="bg-green-500 text-white mt-4"
+                  >
                     Submit
                   </button>
                 </form>
