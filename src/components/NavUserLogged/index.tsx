@@ -57,7 +57,7 @@ export function NavUserLogged() {
     <>
       <div className="w-full h-0.5 bg-white opacity-60"></div>
 
-      <div className="w-full flex font-KoHo justify-between items-center text-white text-base uppercase ">
+      <div className="w-full flex font-KoHo justify-between items-center text-white text-base ">
         {isMenuVisible ? (
           <div className="h-full w-max flex justify-start items-center">
             <div className="flex justify-start items-center h-full gap-2.5 ml-3 mt-2.5 mb-2.5">
@@ -66,7 +66,7 @@ export function NavUserLogged() {
               </Link>
               <div className="w-0.5 rounded h-1/2 bg-white opacity-30"></div>
               {fetchedUserData.team._teamId ? (
-                <Link to="/team/edit">
+                <Link to="/team/dashboard">
                   <RiTeamFill className="text-lg hover:text-yellow-600" />
                 </Link>
               ) : (
@@ -95,8 +95,8 @@ export function NavUserLogged() {
             <p
               className={
                 isUserView
-                  ? "ml-1 mt-2 mb-2 text-base text-yellow-600"
-                  : "ml-1 mt-2 mb-2 text-base"
+                  ? "ml-1 mt-2 mb-2 text-sm text-yellow-600"
+                  : "ml-1 mt-2 mb-2 text-sm"
               }
             >
               {fetchedUserData?.team?.teamTag ? (

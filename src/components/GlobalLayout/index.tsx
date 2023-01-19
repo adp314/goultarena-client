@@ -5,7 +5,7 @@ export function GlobalLayout(props: any) {
   const { pageContainer } = props;
 
   return (
-    <div className="w-screen h-screen box-border bg-[#1C1917]">
+    <div className="w-screen h-screen box-border  bg-gradient-to-bl from-[#1C1917] via-[#1d160f] to-[#311a0a]">
       <div className="w-full h-full flex box-border">
         <NavLayout />
 

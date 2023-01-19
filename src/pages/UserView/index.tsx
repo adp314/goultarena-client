@@ -1,6 +1,6 @@
 import { GlobalLayout } from "../../components/GlobalLayout/index";
 import { FooterLayout } from "../../components/FooterLayout";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useAuth0 } from "@auth0/auth0-react";
 import { useState, useEffect } from "react";
 import { GiUpgrade } from "react-icons/Gi";
@@ -11,7 +11,8 @@ import { IoMdStats } from "react-icons/Io";
 import axios from "axios";
 
 export function UserView() {
-  let { userId } = useParams();
+  let { userId, teamId } = useParams();
+  const navigate = useNavigate();
 
   // const [goultarenaIsLoaded, setGoultarenaIsLoaded] = useState(false);
 
@@ -24,22 +25,42 @@ export function UserView() {
     description: "",
     socialNetworkDiscord: "",
     socialNetworkTwitter: "",
+    team: { _teamId: "", teamName: "", teamTag: "" },
     playerStats: { totalWins: 0, totalDraws: 0, totalLooses: 0 },
     playerPoints: "",
   });
 
+  const [fetchedTeamData, setFetchedTeamData] = useState({
+    _id: "",
+    teamName: "",
+    teamTag: "",
+    teamKeyImg: "",
+    teamMembers: [],
+    totalTeamPointsScore: 0,
+    teamAllStatsCount: { Wins: 0, Draws: 0, Looses: 0 },
+  });
+
   useEffect(() => {
-    async function fetchUserData() {
+    async function fetchUserViewData() {
       try {
-        const res = await axios.get(
+        const resUser = await axios.get(
           `http://localhost:4000/api/user/publicfetch?_id=${userId}`
         );
-        setFetchedUserData(res.data);
+        setFetchedUserData(resUser.data);
+
+        // fetch team data if the player have a team
+
+        if (fetchedUserData.team._teamId) {
+          const resTeam = await axios.get(
+            `http://localhost:4000/api/team/publicfetch?_id=${userId}`
+          );
+          setFetchedTeamData(resTeam.data);
+        }
       } catch (err) {
         console.log(err);
       }
     }
-    fetchUserData();
+    fetchUserViewData();
   }, []);
 
   return (
@@ -61,7 +82,7 @@ export function UserView() {
                   />
                   <div>
                     <h1 className="text-4xl uppercase text-center">
-                      {fetchedUserData?.userName}
+                      {fetchedUserData.userName}
                     </h1>
                     <div className="flex justify-between items-center mt-2">
                       <div className="flex items-center gap-1.5">
@@ -131,9 +152,53 @@ export function UserView() {
                         <h2 className="uppercase">derniers matchs</h2>
                         <div className="border-gray-600 rounded h-full w-full border"></div>
                       </div>
+
                       <div className="flex flex-col w-full h-full gap-1.5">
                         <h2 className="uppercase">équipe</h2>
-                        <div className="border-gray-600 rounded h-full w-full border"></div>
+                        <div className="border-gray-600 rounded h-full w-full border flex justify-between items-center text-sm p-6">
+                          {fetchedUserData.team._teamId ? (
+                            <>
+                              <div
+                                className={`w-28 h-28 rounded border-2 border-gray-600 border-opacity-30 bg-no-repeat bg-cover drop-shadow-md cursor-pointer`}
+                                onClick={() =>
+                                  navigate(
+                                    `/team/view/${fetchedUserData.team._teamId}`
+                                  )
+                                }
+                                style={{
+                                  backgroundImage: `url(https://goultarena-aws3.s3.eu-west-3.amazonaws.com/${fetchedTeamData.teamKeyImg})`,
+                                }}
+                              />
+                              <div className="flex flex-col justify-start gap-3">
+                                <div className="flex gap-2 items-center">
+                                  <span className="uppercase ">name :</span>
+                                  <p>{fetchedUserData.team.teamName}</p>
+                                </div>
+                                <div className="flex gap-2 items-center">
+                                  <span className="uppercase ">Points :</span>
+                                  <p>{fetchedTeamData.totalTeamPointsScore}</p>
+                                </div>
+                                <div className="flex gap-2 items-center">
+                                  <span className="uppercase ">stats :</span>
+                                  <p className="text-blue-600">
+                                    W {fetchedTeamData.teamAllStatsCount.Wins}
+                                  </p>
+                                  <span>-</span>
+                                  <p className="text-gray-300">
+                                    {" "}
+                                    D {fetchedTeamData.teamAllStatsCount.Draws}
+                                  </p>
+                                  <span>-</span>
+                                  <p className="text-red-600">
+                                    L {fetchedTeamData.teamAllStatsCount.Looses}
+                                  </p>
+                                </div>
+                              </div>{" "}
+                            </>
+                          ) : (
+                            <div>no team</div>
+                          )}
+                        </div>
                       </div>
                     </div>
                   </div>

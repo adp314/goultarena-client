@@ -19,16 +19,12 @@ export function NavUserSection() {
 
   useEffect(() => {
     if (user && isAuthenticated === true && isLoading == false) {
-      localStorage.setItem("subIdAuth", user?.sub as string);
-
       setUserDataFromAuth0ToPut({
         email: user.email as string,
         sub: user.sub as string,
         countryLocation: user.country_location as string,
         auth0lastConnexion: user.updated_at as string,
       });
-    }
-    if (user && isAuthenticated === true) {
       setIsUpdated(true);
     } else if (!user && isAuthenticated === false) {
       setIsUpdated(false);
@@ -46,6 +42,8 @@ export function NavUserSection() {
           const response = await api
             .authorized(token)
             .put("/user/updateorsignup", UserDataFromAuth0ToPut);
+
+          sessionStorage.setItem("userData", JSON.stringify(response.data));
         } catch (err) {
           console.log(err);
         }

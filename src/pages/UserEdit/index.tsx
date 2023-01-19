@@ -8,51 +8,42 @@ import api from "../../lib/api";
 import axios from "axios";
 
 export function UserEdit() {
-  const { user, isAuthenticated, isLoading, getAccessTokenSilently } =
-    useAuth0();
-
-  const imageRef = useRef<HTMLInputElement | null>(null);
-  const characterUrlRef = useRef<HTMLInputElement | null>(null);
-
-  const [fetchedUserData, setFetchedUserData] = useState({
-    email: "",
-    userName: "",
-    sub: "",
-    keyProfileImg: "",
-    characterSkinUploaded: ["", ""],
-    description: "",
-    socialNetworkDiscord: "",
-    socialNetworkTwitter: "",
-  });
+  const { getAccessTokenSilently } = useAuth0();
+  const userData = JSON.parse(sessionStorage.getItem("userData") as string);
+  const [fetchedUserData, setFetchedUserData] = useState(userData);
 
   const [isLoadingSubmit, setIsLoadingSubmit] = useState(false);
   const [isLoadingCharacterLink, setIsLoadingCharacterLink] = useState(false);
 
-  interface SkinImage { // api nib
+  const imageRef = useRef<HTMLInputElement | null>(null);
+  const characterUrlRef = useRef<HTMLInputElement | null>(null);
+
+  interface SkinImage {
+    // api nib
     src: string; // url from ankama website (protected)
     image: string; // base64 image
   }
 
   // Get user data with a query param request via the email
 
-  useEffect(() => {
-    async function fetchUserData() {
-      const token = await getAccessTokenSilently();
-      if (user && isAuthenticated === true && isLoading === false) {
-        try {
-          if (user.sub) {
-            const res = await api
-              .authorized(token)
-              .get(`/user/fetch?sub=${user.sub}`);
-            setFetchedUserData(res.data);
-          }
-        } catch (err) {
-          console.log(err);
-        }
-      }
-    }
-    fetchUserData();
-  }, [user && isAuthenticated === true]);
+  // useEffect(() => {
+  //   async function fetchUserData() {
+  //     const token = await getAccessTokenSilently();
+  //     if (user && isAuthenticated === true && isLoading === false) {
+  //       try {
+  //         if (user.sub) {
+  //           const res = await api
+  //             .authorized(token)
+  //             .get(`/user/fetch?sub=${user.sub}`);
+  //           // setFetchedUserData(res.data);
+  //         }
+  //       } catch (err) {
+  //         console.log(err);
+  //       }
+  //     }
+  //   }
+  //   fetchUserData();
+  // }, [user && isAuthenticated === true]);
 
   // function handleChange for the form
 
@@ -145,6 +136,7 @@ export function UserEdit() {
         .authorized(token)
         .put("/user/edit", infosToSendForAPI);
       console.log(putResponse.data);
+      sessionStorage.setItem("userData", JSON.stringify(infosToSendForAPI));
       setIsLoadingSubmit(false);
       window.location.reload();
     } catch (err) {
@@ -314,7 +306,7 @@ export function UserEdit() {
                       name="description"
                       value={fetchedUserData.description}
                       onChange={handleChange}
-                      maxLength={150}
+                      maxLength={128}
                     />
                   </div>
                   <button
