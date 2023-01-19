@@ -17,14 +17,16 @@ import { TeamView } from "./pages/TeamView";
 import { TeamCreate } from "./pages/TeamCreate";
 import { NotAllowedViewPage } from "./pages/NotAllowedViewPage";
 import Auth0ProviderWithNavigate from "./auth/Auth0-provider-with-navigate";
+import { QueryClient, QueryClientProvider } from "react-query";
 
 // import { ProtectedRoute } from "./components/ProtectedRoute";
-
+const queryClient = new QueryClient()
 const loadingMarkup = <LoadingMarkup />;
 
 function App() {
   return (
     <>
+    <QueryClientProvider client={queryClient}>
       <BrowserRouter>
         <Suspense fallback={loadingMarkup}>
           <Auth0ProviderWithNavigate>
@@ -63,6 +65,7 @@ function App() {
           </Auth0ProviderWithNavigate>
         </Suspense>
       </BrowserRouter>
+      </QueryClientProvider>
     </>
   );
 }
