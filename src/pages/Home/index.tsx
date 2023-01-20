@@ -1,16 +1,27 @@
 import { GlobalLayout } from "../../components/GlobalLayout/index";
 import { FooterLayout } from "../../components/FooterLayout";
-import { apiGet, useGetUserData } from "../../lib/users";
+import { useGetUserPublicData } from "../../lib/users";
 import { useAuth0, User } from "@auth0/auth0-react";
 import { useEffect, useState } from "react";
 import { HomeTest } from "../../components/HomeTest";
+import { useParams } from "react-router-dom";
 
-function UserInfo() {
-  const { data } = useGetUserData();
-  return <div className="text-white">{data?.userName}</div>;
-}
+// function getUserPublicData() {
+//   return userData ? (
+//     <div className="text-white">{userData?.userName}</div>
+//   ) : (
+//     <div className="text-white">Loading...</div>
+//   );
+// }
 
 export function Home() {
-  const { user, isLoading, isAuthenticated } = useAuth0();
-  return <GlobalLayout pageContainer={<>{user && <UserInfo />}</>} />;
+  return (
+    <GlobalLayout
+      pageContainer={
+        <>
+          <div className="text-white">hello</div>
+        </>
+      }
+    />
+  );
 }
