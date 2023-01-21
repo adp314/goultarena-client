@@ -1,25 +1,28 @@
 import { useQuery } from "react-query";
 import axios from "axios";
 
-import { useAuth0, Auth0ContextInterface, User } from "@auth0/auth0-react";
+import { useAuth0 } from "@auth0/auth0-react";
 
-export const useGetUserData = () => {
-  const auth = useAuth0();
+export const useGetUserDataWithTokenCheck = () => {
+  const { getAccessTokenSilently } = useAuth0();
 
-  return useQuery(["getUserData"], () => apiGet(auth));
-};
+  return useQuery(["userDataTokenChecked"], async () => {
+    try {
+      const token = await getAccessTokenSilently();
 
-export const apiGet = async (auth: Auth0ContextInterface<User>) => {
-  const token = await auth.getAccessTokenSilently();
-  if (auth.user && auth.isLoading === false && auth.isAuthenticated === true) {
-    const response = await axios.get("http://localhost:4000/api/user/fetch", {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-      params: {
-        sub: auth.user.sub,
-      },
-    });
-    return response.data;
-  }
+      const userDataId = localStorage.getItem("gui");
+      const response = await axios.get(
+        `http://localhost:4000/api/user/fetch?id=${userDataId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      return response.data;
+      
+    } catch (err) {
+      console.log(err);
+    }
+  });
 };

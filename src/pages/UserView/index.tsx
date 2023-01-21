@@ -1,7 +1,7 @@
 import { GlobalLayout } from "../../components/GlobalLayout/index";
 import { FooterLayout } from "../../components/FooterLayout";
 import { useNavigate, useParams } from "react-router-dom";
-import { useGetUserPublicDataWithParam } from "../../lib/usersByParam";
+import { useGetUserDataByParams } from "../../lib/usersByParam";
 import { useQuery } from "react-query";
 import { GiUpgrade } from "react-icons/Gi";
 import { FaTwitter } from "react-icons/fa";
@@ -9,8 +9,7 @@ import { BsDiscord } from "react-icons/Bs";
 import { AiFillTrophy } from "react-icons/Ai";
 
 const getTeamPublicDataInUserViewPage = () => {
-  const userData = JSON.parse(sessionStorage.getItem("userData") as string);
-  const userDataTeamId = userData.team._teamId;
+  const userDataTeamId = localStorage.getItem("gti");
   return useQuery(["getTeamPublicData", userDataTeamId], async () => {
     const response = await fetch(
       `http://localhost:4000/api/team/publicfetch?_id=${userDataTeamId}`,
@@ -27,7 +26,7 @@ const getTeamPublicDataInUserViewPage = () => {
 export function UserView() {
   const navigate = useNavigate();
   let { userId } = useParams();
-  const { data: userData } = useGetUserPublicDataWithParam(userId);
+  const { data: userData } = useGetUserDataByParams(userId);
   const { data: teamData } = getTeamPublicDataInUserViewPage();
 
   return (

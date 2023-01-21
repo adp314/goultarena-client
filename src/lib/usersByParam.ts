@@ -1,6 +1,6 @@
 import { useQuery } from "react-query";
 
-export const useGetUserPublicDataWithParam = (paramId: any) => {
+export const useGetUserDataByParams = (paramId: any) => {
   return useQuery(["getUserPublicData", paramId], async () => {
     const response = await fetch(
       `http://localhost:4000/api/user/publicfetch?_id=${paramId}`,

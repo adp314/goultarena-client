@@ -1,9 +1,10 @@
 import { useAuth0 } from "@auth0/auth0-react";
-import { Link, useLocation, useParams } from "react-router-dom";
-import { useState, useEffect } from "react";
-import api from "../../lib/api";
+import { useGetUserDataWithTokenCheck } from "../../lib/usersWithCheck";
+import { Link, useParams } from "react-router-dom";
+import { useState } from "react";
 import { AiOutlineMenu, AiFillTrophy } from "react-icons/Ai";
 import { GiUpgrade } from "react-icons/Gi";
+import { RxCross2 } from "react-icons/Rx";
 import {
   RiSettingsFill,
   RiTeamFill,
@@ -11,47 +12,12 @@ import {
   RiLogoutCircleRFill,
 } from "react-icons/ri";
 
-import { RxCross2 } from "react-icons/Rx";
-
 export function NavUserLogged() {
-  const { isAuthenticated, user, isLoading, getAccessTokenSilently, logout } =
-    useAuth0();
-
+  const { logout } = useAuth0();
   let { userId } = useParams();
   const [isMenuVisible, setIsMenuVisible] = useState(false);
-
   const isUserView = location.pathname === `/user/view/${userId}`;
-
-  const [fetchedUserData, setFetchedUserData] = useState({
-    _id: "",
-    userName: "",
-    sub: "",
-    email: "",
-    team: { _teamId: "", teamName: "", teamTag: "" },
-    rank: "",
-    playerPoints: "",
-    keyProfileImg: "",
-  });
-
-  useEffect(() => {
-    async function fetchUserDataForNavDisplay() {
-      const token = await getAccessTokenSilently();
-      if (user && isAuthenticated === true && isLoading === false) {
-        try {
-          if (user.sub) {
-            const res = await api
-              .authorized(token)
-              .get(`/user/fetch?sub=${user.sub}`);
-            setFetchedUserData(res.data);
-            console.log(fetchedUserData);
-          }
-        } catch (err) {
-          console.log(err);
-        }
-      }
-    }
-    fetchUserDataForNavDisplay();
-  }, [user && isAuthenticated === true]);
+  const { data: userDataChecked } = useGetUserDataWithTokenCheck();
 
   return (
     <>
@@ -65,7 +31,7 @@ export function NavUserLogged() {
                 <RiUserFill className="text-lg hover:text-yellow-600" />
               </Link>
               <div className="w-0.5 rounded h-1/2 bg-white opacity-30"></div>
-              {fetchedUserData.team._teamId ? (
+              {userDataChecked.team._teamId ? (
                 <Link to="/team/dashboard">
                   <RiTeamFill className="text-lg hover:text-yellow-600" />
                 </Link>
@@ -95,16 +61,11 @@ export function NavUserLogged() {
             <p
               className={
                 isUserView
-                  ? "ml-1 mt-2 mb-2 text-sm text-yellow-600"
-                  : "ml-1 mt-2 mb-2 text-sm"
+                  ? "ml-1.5 my-2 text-sm text-yellow-600 uppercase"
+                  : "ml-1.5 my-2 text-sm uppercase"
               }
             >
-              {fetchedUserData?.team?.teamTag ? (
-                <span>[{fetchedUserData?.team?.teamTag}]</span>
-              ) : (
-                <span className="ml-1"></span>
-              )}{" "}
-              {fetchedUserData?.userName}
+              {userDataChecked?.userName}
             </p>
           </>
         )}
@@ -123,12 +84,12 @@ export function NavUserLogged() {
       {/* /////// */}
       <div className="flex h-full w-full">
         <div className="flex justify-center items-center w-[40%]">
-          {fetchedUserData && fetchedUserData._id && (
-            <Link to={`/user/view/${fetchedUserData._id}`}>
+          {userDataChecked && userDataChecked._id && (
+            <Link to={`/user/view/${userDataChecked._id}`}>
               <div
                 className={`w-14 h-14 rounded border-2 border-gray-600 bg-no-repeat bg-cover shadow-[0_4px_4px_-0px_rgba(0,0,0,0.25)]`}
                 style={{
-                  backgroundImage: `url(https://goultarena-aws3.s3.eu-west-3.amazonaws.com/${fetchedUserData?.keyProfileImg})`,
+                  backgroundImage: `url(https://goultarena-aws3.s3.eu-west-3.amazonaws.com/${userDataChecked?.keyProfileImg})`,
                 }}
               />
             </Link>
@@ -140,7 +101,10 @@ export function NavUserLogged() {
               <GiUpgrade className="text-xl" /> <p>Unranked</p>
             </div>
             <div className="flex items-center gap-2">
-              <AiFillTrophy className="text-xl" /> <p>0 pts</p>
+              <AiFillTrophy className="text-xl" />{" "}
+              <p>
+                0 <span className="text-sm font-extralight">pts</span>
+              </p>
             </div>
           </div>
         </div>

@@ -1,6 +1,7 @@
 import { GlobalLayout } from "../../components/GlobalLayout/index";
 import { useAuth0 } from "@auth0/auth0-react";
 import { FooterLayout } from "../../components/FooterLayout";
+import { useGetUserDataWithTokenCheck } from "../../lib/usersWithCheck";
 import { useEffect, useState, useRef, FormEvent } from "react";
 import { BiRefresh } from "react-icons/Bi";
 import { FaTwitter, FaDiscord } from "react-icons/fa";
@@ -9,50 +10,44 @@ import axios from "axios";
 
 export function UserEdit() {
   const { getAccessTokenSilently } = useAuth0();
-  const userData = JSON.parse(sessionStorage.getItem("userData") as string);
-  const [fetchedUserData, setFetchedUserData] = useState(userData);
-
+  const { data: userData } = useGetUserDataWithTokenCheck();
   const [isLoadingSubmit, setIsLoadingSubmit] = useState(false);
   const [isLoadingCharacterLink, setIsLoadingCharacterLink] = useState(false);
-
   const imageRef = useRef<HTMLInputElement | null>(null);
   const characterUrlRef = useRef<HTMLInputElement | null>(null);
 
   interface SkinImage {
-    // api nib
-    src: string; // url from ankama website (protected)
-    image: string; // base64 image
+    src: string;
+    image: string;
   }
 
-  // Get user data with a query param request via the email
+  const [userEditForm, setUserEditForm] = useState({
+    _id: "",
+    userName: "",
+    keyProfileImg: "",
+    characterSkinUploaded: ["", ""],
+    description: "",
+    socialNetworkDiscord: "",
+    socialNetworkTwitter: "",
+  });
 
-  // useEffect(() => {
-  //   async function fetchUserData() {
-  //     const token = await getAccessTokenSilently();
-  //     if (user && isAuthenticated === true && isLoading === false) {
-  //       try {
-  //         if (user.sub) {
-  //           const res = await api
-  //             .authorized(token)
-  //             .get(`/user/fetch?sub=${user.sub}`);
-  //           // setFetchedUserData(res.data);
-  //         }
-  //       } catch (err) {
-  //         console.log(err);
-  //       }
-  //     }
-  //   }
-  //   fetchUserData();
-  // }, [user && isAuthenticated === true]);
-
-  // function handleChange for the form
+  useEffect(() => {
+    async function fetchUserData() {
+      try {
+        if (userData) {
+          setUserEditForm(userData);
+        }
+      } catch (err) {
+        console.log(err);
+      }
+    }
+    fetchUserData();
+  }, [userData]);
 
   function handleChange(e: any) {
     e.preventDefault();
-    setFetchedUserData({ ...fetchedUserData, [e.target.name]: e.target.value });
+    setUserEditForm({ ...userEditForm, [e.target.name]: e.target.value });
   }
-
-  // handle Character change ,request api nib.gg
 
   async function handleCharacterLink(e: any) {
     e.preventDefault();
@@ -68,16 +63,13 @@ export function UserEdit() {
           }
         );
         const nibApiResJSON = (await nibApiRes.json()) as SkinImage;
-        setFetchedUserData({
-          ...fetchedUserData,
+        setUserEditForm({
+          ...userEditForm,
           characterSkinUploaded: [
             `${nibApiResJSON.image}`,
             `${nibApiResJSON.src}`,
           ],
         });
-        if (fetchedUserData.characterSkinUploaded) {
-        }
-        console.log(nibApiResJSON);
       }
       setIsLoadingCharacterLink(false);
     } catch (error) {
@@ -85,14 +77,11 @@ export function UserEdit() {
     }
   }
 
-  // handle Submit form
-
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
     setIsLoadingSubmit(true);
-    let infosToSendForAPI = { ...fetchedUserData };
+    let infosToSendForAPI = { ...userEditForm };
 
-    // profile img
     try {
       const target = imageRef?.current;
 
@@ -101,7 +90,7 @@ export function UserEdit() {
         if (file) {
           const response = await fetch(
             `http://localhost:4000/api/uploadimg/postimguser?sKey=` +
-              fetchedUserData.keyProfileImg,
+              userEditForm.keyProfileImg,
             {
               method: "GET",
             }
@@ -119,24 +108,20 @@ export function UserEdit() {
 
           await axios.post(post.url, formData);
 
-          setFetchedUserData({ ...fetchedUserData, keyProfileImg: key });
+          setUserEditForm({ ...userEditForm, keyProfileImg: key });
 
-          infosToSendForAPI = { ...fetchedUserData, keyProfileImg: key };
+          infosToSendForAPI = { ...userEditForm, keyProfileImg: key };
         }
       }
     } catch (err) {
       console.log(err);
     }
 
-    // axios.put infos of the state fetchedUserData
-
     try {
       const token = await getAccessTokenSilently();
       const putResponse = await api
         .authorized(token)
         .put("/user/edit", infosToSendForAPI);
-      console.log(putResponse.data);
-      sessionStorage.setItem("userData", JSON.stringify(infosToSendForAPI));
       setIsLoadingSubmit(false);
       window.location.reload();
     } catch (err) {
@@ -156,7 +141,7 @@ export function UserEdit() {
                   alt="character skin"
                   src={
                     "data:image/png;base64," +
-                    fetchedUserData.characterSkinUploaded[0]
+                    userEditForm.characterSkinUploaded[0]
                   }
                 />
               </div>
@@ -182,7 +167,7 @@ export function UserEdit() {
                         type="text"
                         className="rounded-none rounded-r-lg font-KoHo text-base bg-gray-50 border border-gray-300 text-black flex-1 min-w-0 w-full p-2.5 "
                         name="userName"
-                        value={fetchedUserData.userName}
+                        value={userEditForm.userName}
                         onChange={handleChange}
                         pattern="[a-zA-Z][a-zA-Z0-9_-]{2,12}#[0-9]{3}"
                         minLength={7}
@@ -259,7 +244,7 @@ export function UserEdit() {
                         type="text"
                         className="rounded-none rounded-r-lg font-KoHo text-base bg-gray-50 border border-gray-300 text-black flex-1 min-w-0 w-full p-2.5 "
                         name="socialNetworkDiscord"
-                        value={fetchedUserData.socialNetworkDiscord}
+                        value={userEditForm.socialNetworkDiscord}
                         placeholder="Discord Username"
                         onChange={handleChange}
                         pattern="[a-zA-Z][a-zA-Z0-9_-]{2,20}#[0-9]{4}"
@@ -283,7 +268,7 @@ export function UserEdit() {
                         type="text"
                         className="rounded-none rounded-r-lg font-KoHo text-base bg-gray-50 border border-gray-300 text-black flex-1 min-w-0 w-full p-2.5 "
                         name="socialNetworkTwitter"
-                        value={fetchedUserData.socialNetworkTwitter}
+                        value={userEditForm.socialNetworkTwitter}
                         placeholder="@ Twitter Username"
                         onChange={handleChange}
                         pattern="@[A-Za-z0-9_]{1,15}"
@@ -304,7 +289,7 @@ export function UserEdit() {
                       className=" p-3 w-full font-KoHo text-lg text-black rounded-lg border border-gray-300"
                       placeholder="Description, 150max ..."
                       name="description"
-                      value={fetchedUserData.description}
+                      value={userEditForm.description}
                       onChange={handleChange}
                       maxLength={128}
                     />
@@ -327,7 +312,7 @@ export function UserEdit() {
                 <div
                   className={`w-48 h-48 rounded bg-no-repeat bg-cover shadow-[0_4px_4px_-0px_rgba(0,0,0,0.25)]`}
                   style={{
-                    backgroundImage: `url(https://goultarena-aws3.s3.eu-west-3.amazonaws.com/${fetchedUserData.keyProfileImg})`,
+                    backgroundImage: `url(https://goultarena-aws3.s3.eu-west-3.amazonaws.com/${userEditForm.keyProfileImg})`,
                   }}
                 />
               </div>

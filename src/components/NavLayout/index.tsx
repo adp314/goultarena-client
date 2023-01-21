@@ -1,7 +1,6 @@
 import { useTranslation } from "react-i18next";
 import "../../i18n";
 import { ImHome } from "react-icons/im";
-import { FiCornerDownRight } from "react-icons/fi";
 import { RiTableAltFill } from "react-icons/ri";
 import { Link, useLocation } from "react-router-dom";
 import { FaAddressBook } from "react-icons/fa";
@@ -14,10 +13,7 @@ import flagES from "../../images/flg_ES.png";
 import { NavUserSection } from "../NavUserSection";
 
 export function NavLayout() {
-  const { t, i18n } = useTranslation();
-
   const location = useLocation();
-
   const isHome = location.pathname === "/home";
   const isDirectory = location.pathname === "/directory";
   const isLadders = location.pathname === "/ladders";
@@ -25,10 +21,10 @@ export function NavLayout() {
   const isRanking = location.pathname === "/ranking";
   const isHelp = location.pathname === "/help";
 
+  const { t, i18n } = useTranslation();
   function handleClickFR() {
     i18n.changeLanguage("fr");
   }
-
   function handleClickEN() {
     i18n.changeLanguage("en");
   }
@@ -67,7 +63,7 @@ export function NavLayout() {
       <div className="w-full h-0.5 bg-white opacity-10"></div>
 
       <div className="flex flex-col h-full w-full justify-between ">
-        <nav className="flex flex-col box-border w-full gap-8 pl-5 cursor-pointer pt-12">
+        <nav className="flex flex-col box-border w-full gap-8 px-5 cursor-pointer pt-12">
           <div
             className={
               isHome

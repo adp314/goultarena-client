@@ -1,34 +1,11 @@
 import { GlobalLayout } from "../../components/GlobalLayout/index";
 import { FooterLayout } from "../../components/FooterLayout";
-import { useParams } from "react-router-dom";
-import { useState, useEffect } from "react";
-import { GiUpgrade } from "react-icons/Gi";
-import { AiFillTrophy } from "react-icons/Ai";
-import { FaAddressBook } from "react-icons/fa";
 import { DirectoryPlayers } from "../../components/DirectoryPlayers";
 import { DirectoryTeams } from "../../components/DirectoryTeams";
-import axios from "axios";
+import { useState } from "react";
 
 export function Directory() {
-  let { userId } = useParams();
-
-  // const [goultarenaIsLoaded, setGoultarenaIsLoaded] = useState(false);
   const [directorySelect, setDirectorySelect] = useState(true);
-
-  const [fetchedUserData, setFetchedUserData] = useState({
-    email: "",
-    userName: "",
-    sub: "",
-    keyProfileImg: "",
-    characterSkinUploaded: ["", ""],
-    description: "",
-    socialNetworkDiscord: "",
-    socialNetworkTwitter: "",
-    playerStats: { totalWins: 0, totalDraws: 0, totalLooses: 0 },
-    playerPoints: "",
-  });
-
-  console.log(directorySelect);
 
   return (
     <GlobalLayout

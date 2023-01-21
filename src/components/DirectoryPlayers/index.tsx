@@ -1,23 +1,17 @@
 import { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import {  useNavigate } from "react-router-dom";
 import { AiFillTrophy } from "react-icons/Ai";
 import { RiMoreFill } from "react-icons/ri";
 import { FaSearch } from "react-icons/fa";
 import { IoMdStats } from "react-icons/Io";
-import axios from "axios";
 
 export function DirectoryPlayers() {
-  let { userId } = useParams();
   const navigate = useNavigate();
-
   const [pageCount, setPageCount] = useState(1);
-
   const [directoryLoading, setDirectoryLoading] = useState(false);
-
   const [fetchedAllPlayersDirectory, setFetchedAllPlayersDirectory] = useState(
     []
   );
-
   const [filteredPlayersInput, setFilteredPlayersInput] = useState([]);
 
   useEffect(() => {
@@ -30,7 +24,7 @@ export function DirectoryPlayers() {
         const data = await res.json();
         setFetchedAllPlayersDirectory(data);
         setFilteredPlayersInput(data);
-        console.log(data);
+        
       } catch (err) {
         console.log(err);
       }
@@ -56,11 +50,11 @@ export function DirectoryPlayers() {
     <div className="font-KoHo uppercase flex flex-col items-center gap-6">
       <div className="flex items-center justify-start gap-2">
         <form className="flex gap-2 items-center justify-start">
-          <FaSearch />
+          <FaSearch className="text-xl mr-1"/>
           <input
             type="text"
             placeholder="Search Players..."
-            className="rounded text-black"
+            className="rounded text-black p-1"
             onChange={handleSearchInput}
           />
         </form>

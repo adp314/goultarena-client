@@ -1,6 +1,5 @@
 import { GlobalLayout } from "../../components/GlobalLayout/index";
 import { FooterLayout } from "../../components/FooterLayout";
-import { useGetUserPublicData } from "../../lib/users";
 import { useAuth0, User } from "@auth0/auth0-react";
 import { useEffect, useState } from "react";
 import { HomeTest } from "../../components/HomeTest";

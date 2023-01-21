@@ -18,7 +18,7 @@ export function NavUserSection() {
   // set the subIdAuth on localstorage and set the auth0 infos on a state (UserDataFromAuth0ToPut)
 
   useEffect(() => {
-    if (user && isAuthenticated === true && isLoading == false) {
+    if (user && isAuthenticated && !isLoading) {
       setUserDataFromAuth0ToPut({
         email: user.email as string,
         sub: user.sub as string,
@@ -26,7 +26,7 @@ export function NavUserSection() {
         auth0lastConnexion: user.updated_at as string,
       });
       setIsUpdated(true);
-    } else if (!user && isAuthenticated === false) {
+    } else if (!user) {
       setIsUpdated(false);
     }
   }, [user]);
@@ -38,12 +38,12 @@ export function NavUserSection() {
       if (isUpdated === true) {
         try {
           const token = await getAccessTokenSilently();
-
           const response = await api
             .authorized(token)
             .put("/user/updateorsignup", UserDataFromAuth0ToPut);
 
-          sessionStorage.setItem("userData", JSON.stringify(response.data));
+          localStorage.setItem("gui", response.data._id);
+          localStorage.setItem("gti", response.data.team._teamId);
         } catch (err) {
           console.log(err);
         }
