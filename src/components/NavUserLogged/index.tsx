@@ -1,8 +1,9 @@
 import { useAuth0 } from "@auth0/auth0-react";
 import { useGetUserDataWithTokenCheck } from "../../lib/usersWithCheck";
 import { Link, useParams } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { AiOutlineMenu, AiFillTrophy } from "react-icons/Ai";
+import { useQueryClient } from "react-query";
 import { GiUpgrade } from "react-icons/Gi";
 import { RxCross2 } from "react-icons/Rx";
 import {
@@ -13,10 +14,11 @@ import {
 } from "react-icons/ri";
 
 export function NavUserLogged() {
-  const { logout } = useAuth0();
+  const { user, logout } = useAuth0();
   let { userId } = useParams();
+  const queryClient = useQueryClient();
   const [isMenuVisible, setIsMenuVisible] = useState(false);
-  const isUserView = location.pathname === `/user/view/${userId}`;
+  // const isUserView = location.pathname === `/user/view/${userId}`;
   const { data: userDataChecked } = useGetUserDataWithTokenCheck();
 
   return (
@@ -48,10 +50,12 @@ export function NavUserLogged() {
               <RiLogoutCircleRFill
                 className="text-xl cursor-pointer hover:text-yellow-600"
                 onClick={() => {
-                  localStorage.clear();
                   logout({
                     returnTo: window.location.origin,
                   });
+                  queryClient.clear();
+                  localStorage.removeItem("gti");
+                  localStorage.removeItem("gui");
                 }}
               />
             </div>
@@ -59,11 +63,12 @@ export function NavUserLogged() {
         ) : (
           <>
             <p
-              className={
-                isUserView
-                  ? "ml-1.5 my-2 text-sm text-yellow-600 uppercase"
-                  : "ml-1.5 my-2 text-sm uppercase"
-              }
+              className="ml-1.5 my-2 text-sm uppercase"
+              //  {
+              //   isUserView
+              //     ? "ml-1.5 my-2 text-sm text-yellow-600 uppercase"
+              //     : "ml-1.5 my-2 text-sm uppercase"
+              // }
             >
               {userDataChecked?.userName}
             </p>

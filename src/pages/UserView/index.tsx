@@ -9,10 +9,10 @@ import { BsDiscord } from "react-icons/Bs";
 import { AiFillTrophy } from "react-icons/Ai";
 
 const getTeamPublicDataInUserViewPage = () => {
-  const userDataTeamId = localStorage.getItem("gti");
-  return useQuery(["getTeamPublicData", userDataTeamId], async () => {
+  let { userId } = useParams();
+  return useQuery(["getTeamPublicData"], async () => {
     const response = await fetch(
-      `http://localhost:4000/api/team/publicfetch?_id=${userDataTeamId}`,
+      `http://localhost:4000/api/team/publicfetchbyuserid?teamleader=${userId}`,
       {
         method: "GET",
       }
@@ -153,16 +153,16 @@ export function UserView() {
                                         stats :
                                       </span>
                                       <p className="text-blue-600">
-                                        W {teamData?.teamAllStatsCount.Wins}
+                                        W {teamData?.teamAllStatsCount?.Wins}
                                       </p>
                                       <span>-</span>
                                       <p className="text-gray-300">
                                         {" "}
-                                        D {teamData?.teamAllStatsCount.Draws}
+                                        D {teamData?.teamAllStatsCount?.Draws}
                                       </p>
                                       <span>-</span>
                                       <p className="text-red-600">
-                                        L {teamData?.teamAllStatsCount.Looses}
+                                        L {teamData?.teamAllStatsCount?.Looses}
                                       </p>
                                     </div>
                                   </div>{" "}

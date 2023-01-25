@@ -1,15 +1,23 @@
 import { useQuery } from "react-query";
 
 export const useGetTeamDataByParams = (paramId: any) => {
-  return useQuery(["getUserPublicData", paramId], async () => {
-    const response = await fetch(
-      `http://localhost:4000/api/user/publicfetch?_id=${paramId}`,
-      {
-        method: "GET",
-      }
-    );
-    const responseJSON = await response.json();
+  return useQuery(
+    ["getTeamData", paramId],
+    async () => {
+      const response = await fetch(
+        `http://localhost:4000/api/user/publicfetch?_id=${paramId}`,
+        {
+          method: "GET",
+        }
+      );
+      const responseJSON = await response.json();
 
-    return responseJSON;
-  });
+      return responseJSON;
+    },
+    {
+      staleTime: 0,
+      refetchOnWindowFocus: false,
+      refetchInterval: 0,
+    }
+  );
 };
