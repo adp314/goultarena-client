@@ -1,6 +1,8 @@
 import { GlobalLayout } from "../../components/GlobalLayout/index";
 import { FooterLayout } from "../../components/FooterLayout";
-import { useParams } from "react-router-dom";
+import { ErrorPage } from "../ErrorPage";
+import { useNavigate } from "react-router-dom";
+import { useGetUserDataWithTokenCheck } from "../../lib/usersWithCheck";
 import { useState, useEffect, useRef, FormEvent } from "react";
 import { useAuth0 } from "@auth0/auth0-react";
 import api from "../../lib/api";
@@ -8,21 +10,20 @@ import api from "../../lib/api";
 import axios from "axios";
 
 export function TeamCreate() {
-  let { userId } = useParams();
   const imageRef = useRef<HTMLInputElement | null>(null);
+
+  const navigate = useNavigate();
 
   const { user, isAuthenticated, isLoading, getAccessTokenSilently } =
     useAuth0();
 
   const [isLoadingSubmit, setIsLoadingSubmit] = useState(false);
 
-  const [fetchedUserData, setFetchedUserData] = useState({
-    _id: "",
-    userName: "",
-    sub: "",
-  });
+  const [isSubmitForm, setIsSubmitForm] = useState(false);
 
-  const [createTeamInfosForm, setCreateTeamInfosForm] = useState({
+  const { data: userData } = useGetUserDataWithTokenCheck();
+
+  const [createTeamForm, setCreateTeamForm] = useState({
     teamName: "",
     teamTag: "",
     teamKeyImg: "",
@@ -31,36 +32,44 @@ export function TeamCreate() {
     teamLeaderId: "",
   });
 
-  useEffect(() => {
-    async function fetchUserData() {
-      const token = await getAccessTokenSilently();
-      if (user && isAuthenticated === true && isLoading === false) {
-        try {
-          if (user.sub) {
-            const res = await api
-              .authorized(token)
-              .get(`/user/fetch?sub=${user.sub}`);
-            setFetchedUserData(res.data);
-          }
-        } catch (err) {
-          console.log(err);
-        }
-      }
-    }
-    fetchUserData();
-  }, [user && isAuthenticated === true]);
+  // useEffect(() => {
+  //   if (userData) {
+  //     if (userData.team.teamName) {
+  //       navigate("/home");
+  //     }
+  //   }
+  // }, [userData]);
+
+  // useEffect(() => {
+  //   async function fetchUserData() {
+  //     const token = await getAccessTokenSilently();
+  //     if (user && isAuthenticated === true && isLoading === false) {
+  //       try {
+  //         if (user.sub) {
+  //           const res = await api
+  //             .authorized(token)
+  //             .get(`/user/fetch?sub=${user.sub}`);
+  //           setFetchedUserData(res.data);
+  //         }
+  //       } catch (err) {
+  //         console.log(err);
+  //       }
+  //     }
+  //   }
+  //   fetchUserData();
+  // }, [user && isAuthenticated === true]);
 
   function handleChange(e: any) {
     e.preventDefault();
-    setCreateTeamInfosForm({
-      ...createTeamInfosForm,
+    setCreateTeamForm({
+      ...createTeamForm,
       [e.target.name]: e.target.value,
     });
   }
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
-    let infosToSendForAPI = { ...createTeamInfosForm };
+    let infosToSendForAPI = { ...createTeamForm };
 
     try {
       const target = imageRef?.current;
@@ -70,7 +79,7 @@ export function TeamCreate() {
         if (file) {
           const response = await fetch(
             `http://localhost:4000/api/uploadimg/postimgteam?sKey=` +
-              createTeamInfosForm.teamKeyImg,
+              createTeamForm.teamKeyImg,
             {
               method: "GET",
             }
@@ -88,9 +97,9 @@ export function TeamCreate() {
 
           await axios.post(post.url, formData);
 
-          setCreateTeamInfosForm({ ...createTeamInfosForm, teamKeyImg: key });
+          setCreateTeamForm({ ...createTeamForm, teamKeyImg: key });
 
-          infosToSendForAPI = { ...createTeamInfosForm, teamKeyImg: key };
+          infosToSendForAPI = { ...createTeamForm, teamKeyImg: key };
         }
       }
     } catch (err) {
@@ -100,8 +109,8 @@ export function TeamCreate() {
       const token = await getAccessTokenSilently();
 
       infosToSendForAPI = {
-        ...createTeamInfosForm,
-        teamLeaderId: fetchedUserData._id,
+        ...createTeamForm,
+        teamLeaderId: userData._id,
       };
       console.log(infosToSendForAPI);
       const putResponse = await api
@@ -109,13 +118,16 @@ export function TeamCreate() {
         .post("/team/create", infosToSendForAPI);
       console.log(putResponse.data);
       setIsLoadingSubmit(false);
+      setIsSubmitForm(true);
       // window.location.reload();
     } catch (err) {
       console.log(err);
     }
   }
 
-  return (
+  return userData?.team.teamName ? (
+    <ErrorPage />
+  ) : (
     <GlobalLayout
       pageContainer={
         <div className="w-full h-full flex justify-center">
@@ -129,7 +141,7 @@ export function TeamCreate() {
                   <div
                     className={`w-48 h-48 rounded bg-no-repeat bg-cover shadow-[0_4px_4px_-0px_rgba(0,0,0,0.25)]`}
                     style={{
-                      backgroundImage: `url(https://goultarena-aws3.s3.eu-west-3.amazonaws.com/${createTeamInfosForm.teamKeyImg})`,
+                      backgroundImage: `url(https://goultarena-aws3.s3.eu-west-3.amazonaws.com/${createTeamForm.teamKeyImg})`,
                     }}
                   />
                 </div>
@@ -157,7 +169,7 @@ export function TeamCreate() {
                     id="name"
                     name="teamName"
                     onChange={handleChange}
-                    value={createTeamInfosForm.teamName}
+                    value={createTeamForm.teamName}
                   />
                   <label htmlFor="tag">Team Tag</label>
                   <input
@@ -166,7 +178,7 @@ export function TeamCreate() {
                     id="tag"
                     name="teamTag"
                     onChange={handleChange}
-                    value={createTeamInfosForm.teamTag}
+                    value={createTeamForm.teamTag}
                   />
                   <label htmlFor="code">Secret Code</label>
                   <input
@@ -175,7 +187,7 @@ export function TeamCreate() {
                     id="code"
                     name="teamSecretCode"
                     onChange={handleChange}
-                    value={createTeamInfosForm.teamSecretCode}
+                    value={createTeamForm.teamSecretCode}
                   />
                   <label htmlFor="description">Team Description</label>
                   <textarea
@@ -184,7 +196,7 @@ export function TeamCreate() {
                     id="description"
                     rows={Number(4)}
                     onChange={handleChange}
-                    value={createTeamInfosForm.teamDescription}
+                    value={createTeamForm.teamDescription}
                   />
                   <button
                     type="submit"
