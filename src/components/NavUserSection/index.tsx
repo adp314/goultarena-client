@@ -15,16 +15,19 @@ export function NavUserSection() {
     auth0lastConnexion: "",
   });
 
+  const [errorAuth, setErrorAuth] = useState(false);
+
   // set the subIdAuth on localstorage and set the auth0 infos on a state (UserDataFromAuth0ToPut)
 
   useEffect(() => {
-    if (user && isAuthenticated && !isLoading) {
+    if (user && isAuthenticated) {
       setUserDataFromAuth0ToPut({
         email: user.email as string,
         sub: user.sub as string,
         countryLocation: user.country_location as string,
         auth0lastConnexion: user.updated_at as string,
       });
+
       setIsUpdated(true);
     } else if (!user) {
       setIsUpdated(false);
@@ -34,6 +37,7 @@ export function NavUserSection() {
   // Signup with auth0 infos if new user or update infos from auth0
 
   useEffect(() => {
+    setErrorAuth(false);
     async function SignupOrUpdate() {
       if (isUpdated === true) {
         try {
@@ -41,20 +45,19 @@ export function NavUserSection() {
           const response = await api
             .authorized(token)
             .put("/user/updateorsignup", UserDataFromAuth0ToPut);
-
-          localStorage.setItem("gui", response.data._id);
-          localStorage.setItem("gti", response.data.team._teamId);
         } catch (err) {
           console.log(err);
+          setErrorAuth(true);
+          window.alert("Error on Authentication.");
         }
       }
     }
     SignupOrUpdate();
-  }, [user && isUpdated === true]);
+  }, [isUpdated === true]);
 
   return (
-    <div className=" w-full h-[19%] flex flex-col">
-      {isAuthenticated && isUpdated === true ? (
+    <div className=" w-full h-[20%] flex flex-col">
+      {isUpdated === true && errorAuth === false ? (
         <NavUserLogged />
       ) : (
         <NavUserToLog />
