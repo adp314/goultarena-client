@@ -7,61 +7,74 @@ import api from "../../lib/api";
 export function NavUserSection() {
   const { user, isAuthenticated, isLoading, getAccessTokenSilently } =
     useAuth0();
-  const [isUpdated, setIsUpdated] = useState<boolean>(false);
-  const [UserDataFromAuth0ToPut, setUserDataFromAuth0ToPut] = useState({
-    email: "",
-    sub: "",
-    countryLocation: "",
-    auth0lastConnexion: "",
-  });
 
   const [errorAuth, setErrorAuth] = useState(false);
 
   // set the subIdAuth on localstorage and set the auth0 infos on a state (UserDataFromAuth0ToPut)
 
+  // useEffect(() => {
+  //   if (user && isAuthenticated) {
+  //     setUserDataFromAuth0ToPut({
+  //       email: user.email as string,
+  //       sub: user.sub as string,
+  //       countryLocation: user.country_location as string,
+  //       auth0lastConnexion: user.updated_at as string,
+  //     });
+
+  //     setIsUpdated(true);
+  //   } else if (!user) {
+  //     setIsUpdated(false);
+  //   }
+  // }, [user]);
+
+  // // Signup with auth0 infos if new user or update infos from auth0
+
+  // useEffect(() => {
+  //   setErrorAuth(false);
+  //   if (isUpdated === true) {
+  //     async function SignupOrUpdate() {
+  //       try {
+  //         const token = await getAccessTokenSilently();
+  //         const response = await api
+  //           .authorized(token)
+  //           .put("/user/updateorsignup", UserDataFromAuth0ToPut);
+  //       } catch (err) {
+  //         console.log(err);
+  //         setErrorAuth(true);
+  //         window.alert("Error on Authentication.");
+  //       }
+  //     }
+  //     SignupOrUpdate();
+  //   }
+  // }, [isUpdated === true]);
   useEffect(() => {
-    if (user && isAuthenticated) {
-      setUserDataFromAuth0ToPut({
-        email: user.email as string,
-        sub: user.sub as string,
-        countryLocation: user.country_location as string,
-        auth0lastConnexion: user.updated_at as string,
-      });
-
-      setIsUpdated(true);
-    } else if (!user) {
-      setIsUpdated(false);
-    }
-  }, [user]);
-
-  // Signup with auth0 infos if new user or update infos from auth0
-
-  useEffect(() => {
-    setErrorAuth(false);
-    async function SignupOrUpdate() {
-      if (isUpdated === true) {
+    if (user && isAuthenticated === true && isLoading === false) {
+      const { email, sub, country_location, updated_at } = user;
+      async function SignupOrUpdate() {
         try {
           const token = await getAccessTokenSilently();
           const response = await api
             .authorized(token)
-            .put("/user/updateorsignup", UserDataFromAuth0ToPut);
+            .put("/user/updateorsignup", {
+              email,
+              sub,
+              country_location,
+              updated_at,
+            });
+
         } catch (err) {
           console.log(err);
           setErrorAuth(true);
           window.alert("Error on Authentication.");
         }
       }
+      SignupOrUpdate();
     }
-    SignupOrUpdate();
-  }, [isUpdated === true]);
+  }, [user]);
 
   return (
     <div className=" w-full h-[20%] flex flex-col">
-      {isUpdated === true && errorAuth === false ? (
-        <NavUserLogged />
-      ) : (
-        <NavUserToLog />
-      )}
+      {user !== undefined ? <NavUserLogged /> : <NavUserToLog />}
     </div>
   );
 }

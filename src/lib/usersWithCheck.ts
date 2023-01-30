@@ -12,7 +12,7 @@ export const useGetUserDataWithTokenCheck = () => {
       try {
         const token = await getAccessTokenSilently();
 
-        if (user?.sub) {
+        if (user) {
           const response = await axios.get(
             `http://localhost:4000/api/user/specialfetch?sub=${user.sub}`,
             {
