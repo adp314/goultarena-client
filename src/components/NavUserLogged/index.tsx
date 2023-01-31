@@ -18,7 +18,6 @@ export function NavUserLogged() {
   let { userId } = useParams();
   const queryClient = useQueryClient();
   const [isMenuVisible, setIsMenuVisible] = useState(false);
-  // const isUserView = location.pathname === `/user/view/${userId}`;
   const { data: userDataChecked, refetch } = useGetUserDataWithTokenCheck();
 
   function handleRefetch() {
@@ -32,11 +31,11 @@ export function NavUserLogged() {
     <>
       {userDataChecked && (
         <>
-          <div className="w-full h-0.5 bg-white opacity-60"></div>
+          <div className="w-full h-0.5 bg-white opacity-20"></div>
 
           <div className="w-full flex font-KoHo justify-between items-center text-white text-base ">
             {isMenuVisible ? (
-              <div className="h-full w-max flex justify-start items-center">
+              <div className="h-8 w-max flex justify-start items-center">
                 <div className="flex justify-start items-center h-full gap-2.5 ml-3 mt-2.5 mb-2.5">
                   <Link to="/user/edit">
                     <RiUserFill className="text-lg hover:text-yellow-600" />
@@ -68,18 +67,9 @@ export function NavUserLogged() {
                 </div>
               </div>
             ) : (
-              <>
-                <p
-                  className="ml-1.5 my-2 text-sm uppercase"
-                  //  {
-                  //   isUserView
-                  //     ? "ml-1.5 my-2 text-sm text-yellow-600 uppercase"
-                  //     : "ml-1.5 my-2 text-sm uppercase"
-                  // }
-                >
-                  {userDataChecked.userName}
-                </p>
-              </>
+              <div className="flex w-max h-8 justify-start items-center pl-1.5">
+                <p className="text-sm uppercase">{userDataChecked.userName}</p>
+              </div>
             )}
             <div
               className="bg-white h-full w-9 bg-opacity-20 flex justify-center items-center cursor-pointer"
@@ -92,7 +82,7 @@ export function NavUserLogged() {
               )}
             </div>
           </div>
-          <div className="w-full h-0.5 bg-white opacity-60"></div>
+          <div className="w-full h-0.5 bg-white opacity-20"></div>
           {/* /////// */}
           <div className="flex h-full w-full">
             <div className="flex justify-center items-center w-[40%]">

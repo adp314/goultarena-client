@@ -61,7 +61,6 @@ export function NavUserSection() {
               country_location,
               updated_at,
             });
-
         } catch (err) {
           console.log(err);
           setErrorAuth(true);
@@ -73,7 +72,7 @@ export function NavUserSection() {
   }, [user]);
 
   return (
-    <div className=" w-full h-[20%] flex flex-col">
+    <div className=" w-full h-[19%] flex flex-col">
       {user !== undefined ? <NavUserLogged /> : <NavUserToLog />}
     </div>
   );

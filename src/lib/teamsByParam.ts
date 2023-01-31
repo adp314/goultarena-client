@@ -5,7 +5,7 @@ export const useGetTeamDataByParams = (paramId: any) => {
     ["getTeamData", paramId],
     async () => {
       const response = await fetch(
-        `http://localhost:4000/api/user/publicfetch?_id=${paramId}`,
+        `http://localhost:4000/api/team/publicfetchbyteamid?id=${paramId}`,
         {
           method: "GET",
         }

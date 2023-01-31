@@ -119,7 +119,7 @@ export function TeamCreate() {
       console.log(putResponse.data);
       setIsLoadingSubmit(false);
       setIsSubmitForm(true);
-      // window.location.reload();
+      window.location.reload();
     } catch (err) {
       console.log(err);
     }

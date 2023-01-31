@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useAuth0 } from "@auth0/auth0-react";
 import { TeamDashboardEdit } from "../../components/TeamDashboardEdit";
-import { TeamDashboardMatchs } from "../../components/TeamDashboardMatchs";
+import { TeamDashboardView } from "../../components/TeamDashboardView";
 
 export function TeamDashboard() {
   let { userId } = useParams();
@@ -32,10 +32,10 @@ export function TeamDashboard() {
                   >
                     {dashboardSelect ? (
                       <h2 className="uppercase text-2xl text-orange-400">
-                        matchs
+                        dashboard
                       </h2>
                     ) : (
-                      <h2 className="uppercase text-2xl">matchs</h2>
+                      <h2 className="uppercase text-2xl">dashboard</h2>
                     )}
                   </div>
                   <div className="h-5 w-1 bg-white bg-opacity-50 rounded" />
@@ -55,11 +55,7 @@ export function TeamDashboard() {
                   </div>
                 </div>
               </div>
-              {dashboardSelect ? (
-                <TeamDashboardMatchs />
-              ) : (
-                <TeamDashboardEdit />
-              )}
+              {dashboardSelect ? <TeamDashboardView /> : <TeamDashboardEdit />}
             </section>
             <FooterLayout />
           </div>
