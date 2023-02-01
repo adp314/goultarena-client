@@ -1,6 +1,6 @@
 import { useAuth0 } from "@auth0/auth0-react";
 import { useGetUserDataWithTokenCheck } from "../../lib/usersWithCheck";
-import { Link, useParams } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { AiOutlineMenu, AiFillTrophy } from "react-icons/Ai";
 import { useQueryClient } from "react-query";
@@ -15,7 +15,6 @@ import {
 
 export function NavUserLogged() {
   const { user, logout } = useAuth0();
-  let { userId } = useParams();
   const queryClient = useQueryClient();
   const [isMenuVisible, setIsMenuVisible] = useState(false);
   const { data: userDataChecked, refetch } = useGetUserDataWithTokenCheck();
@@ -42,7 +41,9 @@ export function NavUserLogged() {
                   </Link>
                   <div className="w-0.5 rounded h-1/2 bg-white opacity-30"></div>
                   {userDataChecked.team._teamId ? (
-                    <Link to="/team/dashboard">
+                    <Link
+                      to={`/team/dashboard/${userDataChecked.team._teamId}`}
+                    >
                       <RiTeamFill className="text-lg hover:text-yellow-600" />
                     </Link>
                   ) : (

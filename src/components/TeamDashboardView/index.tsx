@@ -1,8 +1,12 @@
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
+import { useGetUserDataByParams } from "../../lib/usersByParam";
+import axios from "axios";
 
 export function TeamDashboardView() {
   const [allPlayersPostuled, setAllPlayersPostuled] = useState([]);
+
+  let { teamId } = useParams();
 
   const navigate = useNavigate();
 
@@ -10,7 +14,7 @@ export function TeamDashboardView() {
     async function fetchAllPlayersPostuled() {
       try {
         const res = await fetch(
-          `http://localhost:4000/api/team/postulationsfetch`
+          `http://localhost:4000/api/team/postulationsfetch?teamid=${teamId}`
         );
         const data = await res.json();
         setAllPlayersPostuled(data);
@@ -21,6 +25,19 @@ export function TeamDashboardView() {
     fetchAllPlayersPostuled();
   }, []);
 
+  async function acceptPostulation() {
+    try {
+      const res = await fetch(
+        `http://localhost:4000/api/team/accept_postulation?teamid=${teamId}`
+      );
+      const data = await res.json();
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
+  async function declinePostulation() {}
+
   return (
     <div className="w-full h-full flex justify-center">
       <div className="h-full mr-24 ml-24 border-r border-l border-white border-opacity-10 w-full">
@@ -30,31 +47,49 @@ export function TeamDashboardView() {
               <h2 className="uppercase text-lg">postulations</h2>
               <div className="">
                 <ul className="border-2 rounded border-white border-opacity-20">
-                  {allPlayersPostuled.map((user: any, index: number) => (
-                    <li
-                      className={`   ${
-                        index % 2 === 0 ? "bg-neutral-800" : "bg-neutral-700"
-                      }`}
-                      key={user.userName}
-                      onClick={() => {
-                        navigate(`/user/view/${user._id}`);
-                      }}
-                    >
-                      <div className="flex justify-between gap-36 p-2">
-                        <div className="flex items-center gap-4">
-                          <div
-                            className={`w-10 h-10 rounded border-2 border-neutral-900 bg-no-repeat bg-cover drop-shadow-md cursor-pointer `}
-                            style={{
-                              backgroundImage: `url(https://goultarena-aws3.s3.eu-west-3.amazonaws.com/${user.keyProfileImg})`,
-                            }}
-                          />
-                          <p className="text-xl cursor-pointer hover:text-yellow-600">
-                            {user.userName}
-                          </p>
+                  {allPlayersPostuled.map((elements: any, index: number) => {
+                    return (
+                      <li
+                        className={`   ${
+                          index % 2 === 0 ? "bg-neutral-800" : "bg-neutral-700"
+                        }`}
+                        key={elements}
+                        onClick={() => {
+                          navigate(`/user/view/${elements._id}`);
+                        }}
+                      >
+                        <div className="flex justify-between gap-36 p-2">
+                          <div className="flex items-center gap-4">
+                            <p className="text-xl cursor-pointer hover:text-yellow-600">
+                              {elements.userName}
+                            </p>
+                          </div>
+                          <div className="flex gap-6">
+                            <p
+                              className="text-green-600 cursor-pointer"
+                              onClick={async () => {
+                                try {
+                                  const res = await axios.put(
+                                    `http://localhost:4000/api/team/acceptpostulation?userid=${elements._id}&teamid=${teamId}`
+                                  );
+                                } catch (err) {
+                                  console.log(err);
+                                }
+                              }}
+                            >
+                              O
+                            </p>
+                            <p
+                              className="text-red-600 cursor-pointer"
+                              onClick={declinePostulation}
+                            >
+                              X
+                            </p>
+                          </div>
                         </div>
-                      </div>
-                    </li>
-                  ))}
+                      </li>
+                    );
+                  })}
                 </ul>
               </div>
             </div>

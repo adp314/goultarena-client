@@ -7,7 +7,7 @@ import { TeamDashboardEdit } from "../../components/TeamDashboardEdit";
 import { TeamDashboardView } from "../../components/TeamDashboardView";
 
 export function TeamDashboard() {
-  let { userId } = useParams();
+  let { userId, teamId } = useParams();
 
   const { user, isAuthenticated, isLoading, getAccessTokenSilently } =
     useAuth0();

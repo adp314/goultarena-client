@@ -44,8 +44,11 @@ function App() {
                   <Route path="/user/edit" element={<UserEdit />} />
                   <Route path="/user/view/:userId" element={<UserView />} />
                   <Route path="/team/create" element={<TeamCreate />} />
-                  <Route path="/team/dashboard" element={<TeamDashboard />} />
                   <Route path="/team/view/:teamId" element={<TeamView />} />
+                  <Route
+                    path="/team/dashboard/:teamId"
+                    element={<TeamDashboard />}
+                  />
                   <Route path="*" element={<ErrorPage />} />
                 </Routes>
               </BrowserView>

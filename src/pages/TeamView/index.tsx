@@ -8,24 +8,30 @@ import axios from "axios";
 
 export function TeamView() {
   let { userId, teamId } = useParams();
-  const inputCodeRef = useRef<HTMLInputElement | null>(null);
+  const [inputCode, setInputCode] = useState({ inputCode: "" });
   const { data: teamData } = useGetTeamDataByParams(teamId);
   const { data: userData } = useGetUserDataWithTokenCheck();
 
+  function handleChange(e: any) {
+    e.preventDefault();
+    setInputCode({ ...inputCode, [e.target.name]: e.target.value });
+  }
   function handleCodeSubmit() {
-    const secretCode = inputCodeRef?.current;
     let postulationRequest = {
       teamId: teamData._id,
       userId: userData._id,
-      secretCode: secretCode,
+      secretCode: inputCode.inputCode,
     };
+    console.log(inputCode);
+
     async function sendPostulation() {
       try {
-        const res = await axios.post(
-          "api/team/postulation",
+        const res = await axios.put(
+          "http://localhost:4000/api/team/postulation",
           postulationRequest
         );
-        //window.location.reload();
+        console.log(inputCode);
+        console.log(res);
       } catch (error) {
         console.log(error);
       }
@@ -53,7 +59,8 @@ export function TeamView() {
                       <input
                         className="text-black"
                         type="text"
-                        ref={inputCodeRef}
+                        name="inputCode"
+                        onChange={handleChange}
                       />
                       <button
                         className="text-white bg-green-800 ml-4"
