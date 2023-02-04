@@ -70,7 +70,9 @@ export function TeamDashboardView() {
                               onClick={async () => {
                                 try {
                                   const res = await axios.put(
-                                    `http://localhost:4000/api/team/acceptpostulation?userid=${elements._id}&teamid=${teamId}`
+                                    `http://localhost:4000/api/team/acceptpostulation?userid=${
+                                      elements._id
+                                    }&teamid=${teamId}`
                                   );
                                 } catch (err) {
                                   console.log(err);
