@@ -25,16 +25,16 @@ export function TeamDashboardView() {
     fetchAllPlayersPostuled();
   }, []);
 
-  async function acceptPostulation() {
-    try {
-      const res = await fetch(
-        `http://localhost:4000/api/team/accept_postulation?teamid=${teamId}`
-      );
-      const data = await res.json();
-    } catch (err) {
-      console.log(err);
-    }
-  }
+  // async function acceptPostulation() {
+  //   try {
+  //     const res = await fetch(
+  //       `http://localhost:4000/api/team/accept_postulation?teamid=${teamId}`
+  //     );
+  //     const data = await res.json();
+  //   } catch (err) {
+  //     console.log(err);
+  //   }
+  // }
 
   async function declinePostulation() {}
 
@@ -54,9 +54,9 @@ export function TeamDashboardView() {
                           index % 2 === 0 ? "bg-neutral-800" : "bg-neutral-700"
                         }`}
                         key={elements}
-                        onClick={() => {
-                          navigate(`/user/view/${elements._id}`);
-                        }}
+                        // onClick={() => {
+                        //   navigate(`/user/view/${elements._id}`);
+                        // }}
                       >
                         <div className="flex justify-between gap-36 p-2">
                           <div className="flex items-center gap-4">
@@ -70,9 +70,7 @@ export function TeamDashboardView() {
                               onClick={async () => {
                                 try {
                                   const res = await axios.put(
-                                    `http://localhost:4000/api/team/acceptpostulation?userid=${
-                                      elements._id
-                                    }&teamid=${teamId}`
+                                    `http://localhost:4000/api/team/acceptpostulation?userid=${elements._id}&teamid=${teamId}`
                                   );
                                 } catch (err) {
                                   console.log(err);
