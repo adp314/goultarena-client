@@ -72,6 +72,8 @@ export function TeamDashboardView() {
                                   const res = await axios.put(
                                     `http://localhost:4000/api/team/acceptpostulation?userid=${elements._id}&teamid=${teamId}`
                                   );
+
+                                  window.location.reload();
                                 } catch (err) {
                                   console.log(err);
                                 }
