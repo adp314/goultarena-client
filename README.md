@@ -2,8 +2,11 @@
 
 Back-end : https://github.com/adp314/goultarena-api
 
-On this project, i use :
+For this project, i use :
 
 - ReactJS / NodeJS
+- TailwindCSS
 - Typescript
-- libs like ( Auth0, React Query, i18n etc... )
+- Famous libs like ( Auth0, ReactQuery, i18n etc... )
+- Mongoose
+- MangoDB
