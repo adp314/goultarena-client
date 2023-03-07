@@ -1,19 +1,9 @@
 # goultarena-client
 
-TECH USED IN THIS PROJECT ON CLIENT SIDE ONLY.
+Back-end : https://github.com/adp314/goultarena-api
 
+On this project, i use :
 
-
-CLIENT (FRONT) SIDE TECHS :
-
-- React
-- Vite
-- TypeScript
-
-
-libs:
-
-- Axios
-- Auth0
-- React Icons
-- TailwindCSS
+- ReactJS / NodeJS
+- Typescript
+- libs like ( Auth0, React Query, i18n etc... )
